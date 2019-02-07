@@ -1,0 +1,206 @@
+.input-small{
+    border: 1px solid var(--color-grey-light-5);
+    padding: .3rem 1rem;
+    border-radius: .75rem;
+    background-color: var(--color-grey-light-1);
+    font-size: 1.2rem;
+    //flex: 1;
+    transition: all .2s;
+    
+    &--disabled{
+        background-color: var(--color-grey-light-2);
+        color: var(--color-grey-dark-1);
+    }
+
+    &--nutrients{
+        margin-left: $s-size;
+        background-color: var(--color-primary-1);
+    }
+
+    &--count{
+        width: 8rem;
+        &--shopping{
+            padding: .4rem 1rem;
+        }
+    }
+
+    &:focus{
+        outline: none;
+    }
+
+    &--unit{
+        cursor: pointer;
+        &:focus{
+            border-radius: .75rem .75rem 0 0;
+        }
+
+        &--recipe-selector{
+            flex: initial;
+        }
+    }
+
+    &--text{
+        flex: 1;
+        padding: .5rem 3.5rem .5rem 1.5rem;
+
+        //element nie chcial sie kurczyc w advenced search
+        width: 100%;
+    }
+}
+
+.input-small__btn{
+    border: 1px solid var(--color-grey-light-5);
+    color: var(--color-grey-dark-1);
+    background-color: var(--color-grey-light-4);
+    border-radius: .75rem;
+    padding: 0 .5rem;
+    margin-left: -3rem;
+    cursor: pointer;
+    transition: all .2s;
+
+    &--disabled{
+        background-color: var(--color-grey-light-2);
+        color: var(--color-grey-dark-1);
+        cursor: initial;
+
+        &:hover{
+            background-color: var(--color-grey-light-2) !important;
+        }
+    }
+
+    &:focus{
+        outline: none;
+    }
+    &:hover{
+        background-color: var(--color-grey-light-4-5);
+    }
+}
+
+.button{
+    border-radius: 2rem;
+    cursor: pointer;
+    padding: .6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    border: none;
+    color: var(--color-grey-dark-1);
+    transition: all .2s;
+    &--small{
+        padding: .4rem 1rem;
+        font-size: 1.2rem;
+    }
+    &--primary{
+        border: 1px solid var(--color-primary-2);
+        background: linear-gradient(to right bottom, var(--color-primary-2), var(--color-primary-3));
+        &:hover{
+            border: 1px solid var(--color-primary-4);
+        }
+    }
+
+    &--grey{
+        border: 1px solid var(--color-grey-light-2);
+        background: linear-gradient(to right bottom, var(--color-grey-light-2), var(--color-grey-light-5));
+        &:hover{
+            border: 1px solid var(--color-grey-dark-5);
+        }
+    }
+
+    &:focus{
+        outline: none;
+    }
+}
+
+.ingredient-input{
+    border: 1px solid var(--color-grey-dark-1);
+
+    border-radius: 3px;
+    font-size: 1.2rem;
+    &:focus{
+        outline: none;
+    }
+    height: 2.5rem;
+    padding: 0 $xs-size;
+
+    &--count{
+        width: 7rem;
+    }
+}
+
+.label{
+    display: flex;
+    padding-right: 1.5rem;
+
+    @media only screen and (max-width: $bp-small){
+        flex-direction: column;
+    }
+    @media only screen and (max-width: $bp-tiny){
+        flex-direction: row;
+    }
+    &:last-child{
+        padding-right: 0;
+    }
+
+    &__containerForInputBtn{
+        display: flex;
+    }
+
+    &--url{
+        padding: 0;
+
+        @media only screen and (max-width: $bp-small){
+            margin-bottom: .8rem;
+        } 
+
+        @media only screen and (max-width: $bp-tiny){
+            flex-direction: column;
+        } 
+    }
+    &--health{
+        flex: 1;
+        padding-right: 0;
+        
+        &:focus + .input-small__btn{
+            border-radius: .75rem .75rem 0 0;
+
+        }
+    }
+    &__text{
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        margin-right: 1rem;
+        @media only screen and (max-width: $bp-small){
+            text-align: center;
+            margin-right: 0;
+            display: block;
+        }
+        @media only screen and (max-width: $bp-tiny){
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+
+        &--url{
+            @media only screen and (max-width: $bp-tiny){
+                text-align: center;
+                margin-right: 0;
+                display: block;
+            } 
+        }
+    }
+}
+
+.input-default{
+    border: none;
+    border-bottom: 2px solid var(--color-grey-light-5);
+}
+
+.input-valid{
+    border: none;
+    border-bottom: 2px solid var(--color-green);
+}
+
+.input-invalid{
+    border: none;
+    border-bottom: 2px solid var(--color-red);
+}

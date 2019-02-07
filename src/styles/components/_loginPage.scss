@@ -1,0 +1,44 @@
+.login{
+    background-image: linear-gradient(to right bottom, var(--color-primary-2), var(--color-primary-4));
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
+    border-radius: .3rem;
+    box-shadow: 0 2rem 4rem rgba(black, .2);
+    width: 35rem;
+    &__title{
+        text-align: center;
+        color: var(--color-grey-dark-1);
+        &--huge{
+            font-size: 3rem;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1;
+        }
+
+        &--small{
+            margin-top: .5rem;
+            font-size: 1.4rem;
+            letter-spacing: .3rem;
+        }
+    }
+
+    &-btn{
+        &:first-child{
+            margin-top: 1.5rem;
+        }
+        &:last-child{
+            margin-top: 1rem;
+        }
+        padding: .7rem 1.5rem;
+        font-size: 1.4rem;
+        &-container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}

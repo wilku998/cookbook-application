@@ -1,0 +1,101 @@
+.recipes-list{
+    min-height: 100vh;
+    flex: 1;
+    background:  linear-gradient(to right bottom, var(--color-primary-2), var(--color-primary-3));
+    display: flex;
+    flex-direction: column;
+    &__recipes{
+        display: flex;
+        flex-flow: row wrap;
+        //justify-content: space-evenly;
+        margin-bottom: $xl-size;
+    }
+
+    &__move{
+        margin-top: auto;
+    }
+    &__item{
+        border: 1px solid var(--color-primary-4);
+        border-radius: .3rem;
+        background-position: center;
+        background-size: cover;
+        //background-color: $color-gray-light-1;
+        width: 28.999%;
+        margin: $xl-size 0 0 3.333%;
+        height: 35rem;
+        color: black;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+
+        @media only screen and (max-width: $bp-small){
+            width: 45%;
+        }
+
+        @media only screen and (max-width: $bp-tiny){
+            width: 90%;
+            margin: $xl-size 5% 0 5%;            
+        }
+
+        &__image{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-height: 100%;
+            min-width: 100%;
+        }
+
+        &__action{
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            height: 4rem;
+            width: 4rem;
+            border-radius: 50%;
+            background-color: rgba(#333, .5);
+
+            &__icon{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 2rem;
+                color: var(--color-grey-light-1)
+            }
+
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        &__description{
+            color: var(--color-grey-dark-1);
+            padding: 1rem;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: rgba(#f4f2f2, .75);
+            text-align: left;
+            &__title{
+                font-size: 1.6rem;
+                text-transform: uppercase;
+            }
+
+            &__info{
+                font-size: 1.2rem;
+                display: block;
+                display: flex;
+                align-items: center;
+            }
+            &:hover{
+                cursor: pointer;
+            }
+        }
+
+        &__icon-small{
+            font-size: 1rem;
+            margin-right: .5rem;
+        }
+    }
+}

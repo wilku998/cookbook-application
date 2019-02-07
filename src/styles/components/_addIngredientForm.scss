@@ -1,0 +1,47 @@
+.add-ingredient-form{
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: space-between;
+    flex-direction: column;
+    font-size: 1.2rem;
+
+    &--primary{
+        background:  linear-gradient(to right bottom, var(--color-primary-3), var(--color-primary-3-4));
+
+    }
+
+    &--grey{
+        background:  linear-gradient(to right bottom, var(--color-grey-light-4), var(--color-grey-light-1));
+
+    }
+
+    &__span{
+        font-size: 1.4rem;
+    }
+    &--health{
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        &>span{
+            margin-right: 1rem;
+        }
+    }
+    &__top{
+        display: flex;
+        justify-content: space-between;
+
+
+        @media only screen and (max-width: $bp-medium){
+            justify-content: flex-start;
+        }
+
+        @media only screen and (max-width: $bp-small){
+            justify-content: space-between;
+        }
+    }
+    &__down{
+        padding-top: 1rem;
+        display: flex;
+        justify-content: center;
+    }
+}

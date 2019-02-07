@@ -1,0 +1,28 @@
+.move-buttons{
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0;
+    background-color: var(--color-primary-4);
+
+    &--shopping-list{
+        background-color: var(--color-grey-light-5);
+    }
+    &__btn{
+        margin: 0 $xl-size;
+        display: inline-block;
+        background: linear-gradient(to right bottom, var(--color-primary-2), var(--color-primary-4));
+        color: var(--color-grey-dark-1);
+        padding: .5rem 1.5rem;
+        border-radius: 10rem;
+        text-transform: lowercase;
+
+        &--shopping-list{
+            font-size: 1.2rem;
+            background: linear-gradient(to right bottom, var(--color-grey-light-2), var(--color-grey-light-3));
+        }
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}
