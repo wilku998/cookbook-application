@@ -82,7 +82,8 @@ class GreetingPopup extends React.Component{
         onRequestClose={this.closeModal}
         className="popup popup--first-login"
         shouldCloseOnOverlayClick={false}
-        style= {{overlay: {zIndex: 100}}}
+        style= {{overlay: {zIndex: 100, background: 'linear-gradient(to right bottom, rgba(255,255,255,0.5), rgba(180, 180, 180, 0.5))',
+        overflowY:'scroll', paddingBottom: '20rem'}}}
         >
             <div className="popup__greeting">
                 <h2 className="popup__greeting__h">Welcome in cookbook app</h2>
@@ -91,8 +92,8 @@ class GreetingPopup extends React.Component{
 
             <div className="popup__avatar-container">
                 <div className="popup__avatar" ref={"image"} style={{backgroundImage: `url(${this.state.img})`}}>
-                    <input className="fileButton" type="file" onChange={e => this.fileSelection(e)} />
-                    {this.state.submittingDisabled ? <img className="loader__image fileButton__loader" src="/images/loader.gif" />
+                    <input className="fileButton fileButton--greeting" type="file" onChange={e => this.fileSelection(e)} />
+                    {this.state.submittingDisabled ? <img className="loader__image fileButton__loader fileButton__loader--greeting" src="/images/loader.gif" />
                         :
                     !this.state.avatarChanged && <i className="icon-camera fileButton__icon fileButton__icon--avatar"/>}                           
                 </div>

@@ -30,7 +30,6 @@ class ShoppingList extends React.Component{
         this.onAddIngredientChange = this.onAddIngredientChange.bind(this);
         this.addIngredient = this.addIngredient.bind(this);
         this.removeIngredient = this.removeIngredient.bind(this);
-        this.onCountChange = this.onCountChange.bind(this);
 
         this.nextPage=this.nextPage.bind(this);
         this.prevPage=this.prevPage.bind(this);
@@ -52,7 +51,7 @@ class ShoppingList extends React.Component{
             })
         }
 
-        if(countValidation(count, unit) && (count>=sumOfSameCounts || this.state.selectorValue!='all')){
+        if(countValidation(count, unit, countBefore) && (count>=sumOfSameCounts || this.state.selectorValue!='all')){
             const sign = Math.sign(count - countBefore);
             const diffrence = Math.abs(count - countBefore)
     
@@ -84,11 +83,10 @@ class ShoppingList extends React.Component{
     }
 
     onAddCountChange(value){
-        const countNumber = countValidation(value, this.state.formUnit);
 
-        countNumber && 
+        countValidation(value, this.state.formUnit) && 
         this.setState((state) => ({
-            formCount: state.formCount==countNumber ? .9 : countNumber,
+            formCount: value
         }))
     }
 
@@ -109,7 +107,7 @@ class ShoppingList extends React.Component{
 
     addIngredient(e){
         e.preventDefault();
-        !this.state.addingDisabled && this.props.addIngredient(this.state.formCount, this.state.formUnit, this.state.formIngredient).then(() => {
+        !this.state.addingDisabled && this.props.addIngredient(parseFloat(this.state.formCount), this.state.formUnit, this.state.formIngredient).then(() => {
             this.setState(() => ({
                 formCount: 1,
                 formUnit: 'kg',
@@ -261,7 +259,7 @@ IngredientsList.js:15 send heights
                         formCount={this.state.formCount} formUnit={this.state.formUnit} formIngredient={this.state.formIngredient}
                         lines={this.props.twoCompVisible ? 2 : this.props.scrWidth<=350 ? 2 : 1}
                         addingDisabled={this.state.formIngredient==="" ? false || this.state.selectorValue!=='all' : this.state.addingDisabled}
-                        parent="shopping"
+                        parent={this.props.scrWidth>910 ? "shopping" : ""}
                     />
 
                     <div className="shopping-list__menu">
@@ -274,7 +272,7 @@ IngredientsList.js:15 send heights
                             return <option key={e} value={e}>{reduceTitle(e, 15)}</option>
                         })}   
                         </select>
-                        <button className="button button--grey" onClick={() => this.removeAll()}>Remove all</button>
+                        <button className={this.props.scrWidth >910 ? "button button--grey" : "button button--primary"} onClick={() => this.removeAll()}>Remove all</button>
                     </div>
                 </div>
                 

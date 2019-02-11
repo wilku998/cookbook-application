@@ -1,16 +1,16 @@
 .popup{
-    &-container{
-        position: relative;
-    }
+
     outline: none;
     border-radius: .5rem;
     border: 1px solid var(--color-prmiary-6);
     background-color: var(--color-primary-3);
     padding: 3rem;
+    
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
     color: var(--color-grey-dark-1);
 
     &--gradient{
@@ -26,12 +26,11 @@
     &__btn{
         box-shadow: 0 1rem 4rem rgba(black, .2);
         border: none;
-        padding: .8rem 1.5rem;
+        padding: 1rem 2rem;
         &-container{
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
             &--first-login{
                 padding: 2rem;
                 background-color: var(--color-primary-4);
@@ -41,7 +40,7 @@
             box-shadow: 0 .5rem 2rem rgba(black, .2);
 
             &:first-child{
-                margin-bottom: 2rem;
+                margin-right: 2rem;
             }
         }
         &:focus{
@@ -62,12 +61,13 @@
         width: 35rem;
         height: 35rem;
         &-container{
-            width: 35rem;
-            height: 35rem;
-            margin: 2rem auto;
+            padding: 2rem;
             display: block;
             position: relative;
+            display: flex;
+            justify-content: center;
         }
+
     }
 
     &__greeting{

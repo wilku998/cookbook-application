@@ -203,7 +203,7 @@
         background-color: var(--color-primary-4);
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
 
         &--column{
             flex-direction: column;
@@ -215,7 +215,7 @@
             }
         }
 
-        @media only screen and (max-width: $bp-smallest){
+        @media only screen and (max-width: $bp-tiny){
             flex-direction: column;
             align-items: flex-start;
         }

@@ -18,11 +18,20 @@ export const addIngredients = (ingredients, from) => {
             igr.unit === 'none' ? igr.unit="": igr.unit=igr.unit;
             const indexOfSameIngredient = allIngredients.findIndex(e => e.ingredient === igr.ingredient && e.unit === igr.unit);
             if(indexOfSameIngredient>-1){
-                allIngredients[indexOfSameIngredient] = {
-                    ...igr,
-                    count: Math.round((allIngredients[indexOfSameIngredient].count + igr.count)*100)/100
+              let count = Math.round((allIngredients[indexOfSameIngredient].count + igr.count)*100)/100;
+              
+              if(from==='all'){
+                if(igr.unit==='g' && count>1000){
+                  count = 1000
+                } else if(igr.unit!=='g' && count>100){
+                  count = 100
                 }
-                
+              }
+
+              allIngredients[indexOfSameIngredient] = {
+                  ...igr,
+                  count 
+              }
             }else{
                 allIngredients.push(igr);
             }

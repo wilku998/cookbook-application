@@ -111,21 +111,21 @@ class CreateRecipe extends React.Component {
     setLabel(label){        
         this.setState(({recipe} = state) => ({
             recipe: {...recipe, label},
-            validLabel: label.length >= 5 && label.length<=30
+            validLabel: label.length >= 5 && label.length<=40
         }))
     }
 
     onAddCountChange(value){
-        const countNumber = countValidation(value);
-        countNumber && 
+        countValidation(value, this.state.formUnit) && 
         this.setState(() => ({
-            formCount: countNumber
+            formCount: value,
         }))
     }
 
     onAddUnitChange(value){
-        this.setState(() => ({
-            formUnit: value
+        this.setState((state) => ({
+            formUnit: value,
+            formCount: state.formCount>100 ? 100 : state.formCount
         }))
     }
 
@@ -141,17 +141,27 @@ class CreateRecipe extends React.Component {
         if(this.state.validForm){
             const index = this.state.recipe.ingredients.findIndex(e => e.ingredient === this.state.formIngredient && e.unit === this.state.formUnit)
             let ingredients;
-
             if(index===-1){
-                ingredients = [...this.state.recipe.ingredients, {count: this.state.formCount, unit: this.state.formUnit==='none' ? "" : this.state.formUnit,
+                ingredients = [...this.state.recipe.ingredients, {count: parseFloat(this.state.formCount), unit: this.state.formUnit==='none' ? "" : this.state.formUnit,
                     ingredient: this.state.formIngredient
                 }];
             }else{
                 ingredients = this.state.recipe.ingredients.map((e, i) => {
                     if(i === index){
+                        const formCount = parseFloat(this.state.formCount);
+                        console.log(this.state.formCount)
+                        console.log(e.count)
+                        let count;
+                        if(this.state.formUnit!=="g" && e.count+formCount>100){
+                            count=100
+                        }else if (this.state.formUnit==="g" && e.count+formCount>1000){
+                            count=1000
+                        }else{
+                            count = formCount + e.count
+                        }
                         return{
                             ...e,
-                            count: this.state.formCount + e.count
+                            count
                         }
                     }else{
                         return e
@@ -178,15 +188,14 @@ class CreateRecipe extends React.Component {
     }
 
     onCountChange(count, ingredient, countBefore, unit){
-        const countNumber =countValidation(count, unit) 
-        countNumber && this.setState(({recipe} = state) => ({
+        countValidation(count, unit) && this.setState(({recipe} = state) => ({
             recipe: {
                 ...recipe,
                 ingredients: recipe.ingredients.map(e => {
                 if(e.ingredient===ingredient && e.unit===unit){
                     return {
                         ...e,
-                        count: countNumber
+                        count
                     }
                 }else{
                     return e
@@ -322,7 +331,7 @@ class CreateRecipe extends React.Component {
                             <div ref={"image"} style={{backgroundImage: `url(${this.state.recipe.image})`, width: this.state.imageHeight}}
                             className="recipe__header__image__content">
                                 <input type="file" className="fileButton" onChange={e => this.fileSelection(e)} />
-                                {this.state.addingDisabled ? <img className="loader__image fileButton__loader fileButton__loader--small"
+                                {this.state.addingDisabled ? <img className="loader__image fileButton__loader fileButton__loader--mid"
                                 src="/images/loader.gif" />
                                     :
                                 !this.state.avatarChanged && <i className="icon-camera fileButton__icon"/>}                                

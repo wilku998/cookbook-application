@@ -5,6 +5,10 @@
     outline: none;
     opacity: 0;
     z-index: 10;
+
+    &--greeting{
+        position: relative;
+    }
     &:hover{
         cursor: pointer;
     }
@@ -14,12 +18,12 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        height: 15rem;
-        width: 15rem;
+        height: 80%;
+        width: 80%;
 
-        &--small{
-            height: 10rem;
-            width: 10rem;
+        &--greeting{
+            height: 50%;
+            width: 50%;
         }
     }
 

@@ -1,8 +1,10 @@
-export const countValidation = (count, unit) => {
+export const countValidation = (count, unit, countBefore) => {
     const validation = (count.split('').includes('.') ? (count.split('.')[1].length<2) : true);
     const countNumber = parseFloat(count);
-    if(validation && countNumber>=0 && (countNumber<=100 || (unit==='g' && countNumber<1000))){
-        return countNumber
+    if(validation && countNumber>=0 && ((countNumber<=100 || (unit==='g' && countNumber<=1000) || count<countBefore))){
+        return true
+    }else{
+        false
     }
     
 
@@ -15,7 +17,7 @@ export const ingredientValidation = (value) => {
             validation=false;
         }
     })
-    if(value.length>2 && value.length<200 && validation){
+    if(value.length>2 && value.length<80 && validation){
         return true
     } else {
         return false

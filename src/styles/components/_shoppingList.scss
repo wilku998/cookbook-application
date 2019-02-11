@@ -7,6 +7,11 @@
     display: flex;
     flex-direction: column;
 
+    @media only screen and (max-width: $bp-medium){
+        border: none;
+        background: linear-gradient(to right bottom, var(--color-primary-2), var(--color-primary-3));
+    }
+
     &--fullscr{
         flex:1;
     }
@@ -21,6 +26,10 @@
             padding: 2rem;
             text-align: center;
             font-weight: 300;
+
+            @media only screen and (max-width: $bp-medium){
+                background-color: var(--color-primary-4);
+            }
         }
 
 
@@ -36,6 +45,9 @@
 
     &__menu{
         background-color: var(--color-grey-light-5);
+        @media only screen and (max-width: $bp-medium){
+            background-color: var(--color-primary-4);
+        }
         font-size: 1.2rem;
         padding: 1rem 2rem;
         display: flex;

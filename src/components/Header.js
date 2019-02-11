@@ -17,7 +17,7 @@ export class Header extends React.Component {
     this.state = {
       query: '',
       wasSearchedForTest: false,
-      searchFrom: 'users',
+      searchFrom: 'edamam',
       advencedOpen: false,
       animationOfHidingAdvencedSearch: false,
       filterHealthLabels: healthLabels.map(e => ({...e, isActive: false})),
@@ -28,7 +28,9 @@ export class Header extends React.Component {
       searchVisible: false,
       mainMenuVisible: false,
       selected: '',
-      arrowDown: false
+      filterIngredientsInputValid: false,
+      arrowDown: false,
+      addingFiltersDisabled: true
     }
   }
 
@@ -140,24 +142,36 @@ export class Header extends React.Component {
   }
 
   onFilterIngredientsInputChange(filterIngredientsInput){
+    const index = this.state.filterIngredients.findIndex(e => e===filterIngredientsInput);
+    const filterIngredientsInputValid = ingredientValidation(filterIngredientsInput) && index===-1;
+
     this.setState(()=>({
-      filterIngredientsInput
+      filterIngredientsInput,
+      filterIngredientsInputValid
     }))
   }
 
   addFilterIngredient(event){
     event.preventDefault();
-    const valid = ingredientValidation(this.state.filterIngredientsInput);
 
-    valid && this.setState((state) => ({
-      filterIngredients: [...state.filterIngredients, state.filterIngredientsInput],
-      filterIngredientsInput: ""
-    }))
+    if(this.state.filterIngredients.length<5){
+      const filterIngredients = [...this.state.filterIngredients, this.state.filterIngredientsInput];
+
+      this.state.filterIngredientsInputValid && this.setState((state) => ({
+        filterIngredients,
+        filterIngredientsInput: "",
+        filterIngredientsInputValid: false,
+        addingFiltersDisabled: filterIngredients.length>=5
+      }))
+    }
   }
 
-  deleteFilterProperty(from, property){
+  deleteFilterIngredients(igr){
+    const filterIngredients = this.state.filterIngredients.filter(e => e!==igr);
+
     this.setState(state => ({
-      [from]: state[from].filter(e => e!==property)
+      filterIngredients,
+      addingFiltersDisabled: filterIngredients.length>=5
     }))
   }
 
@@ -171,7 +185,7 @@ export class Header extends React.Component {
     }
 
     //closing
-    if(this.state.advencedOpen){
+    if(!value){
       this.setState(() => ({
         animationOfHidingAdvencedSearch: true,
         arrowDown: false
@@ -188,7 +202,7 @@ export class Header extends React.Component {
   }
 
   toggleWhenMobile(mainMenuVisible, searchVisible){
-    mainMenuVisible && this.toggleAdvencedSearch(false);
+    !searchVisible && this.toggleAdvencedSearch(false);
     
     this.setState((state) => ({
       searchVisible,
@@ -206,8 +220,10 @@ export class Header extends React.Component {
   }
 
   selectSearchFrom(value){
-    this.setState(() => ({
-      searchFrom: value
+    this.setState((state) => ({
+      searchFrom: value,
+      addingFiltersDisabled: value==='edamam',
+      filterIngredients: value==='edamam' ? [] : state.filterIngredients
     }))
   }
 
@@ -225,10 +241,13 @@ export class Header extends React.Component {
 
   renderNavUser(name){
     return (
-      name ? (<div className="nav__user" 
-      onMouseOut={() => this.showUserMenu(false)} onMouseOver={() => this.showUserMenu(true)}>
-        <img className="nav__user__picture" src={this.props.userInfo.avatar}/>
-        <span className="nav__user__name">{name}</span>
+      name ? (
+      <div className="nav__user" 
+        onMouseOut={() => this.showUserMenu(false)} onMouseOver={() => this.showUserMenu(true)}>
+        <div className="nav__user__content">
+          <img className="nav__user__picture" src={this.props.userInfo.avatar}/>
+          <span className="nav__user__name">{name}</span>
+        </div>
         <div className={this.state.userMenuVisible ? "nav__user__menu" : "nav__user__menu nav__user__menu--hidden"}>
           <span className="nav__user__menu__option" onClick={() => this.props.startLogout()}>logout</span>
         </div>
@@ -268,6 +287,7 @@ export class Header extends React.Component {
                 {this.state.advencedOpen && (
                 <div className={this.state.animationOfHidingAdvencedSearch ? "advenced-search advenced-search--hide" : "advenced-search"}>
                   <div className="advenced-search__left">
+                  
                     <div className="advenced-search__item">
                       <span className="advenced-search__title">Search from</span>
                         <label className="advenced-search__label">
@@ -285,17 +305,29 @@ export class Header extends React.Component {
                     <div className="advenced-search__item advenced-search__item--ingredients">
                       <span className="advenced-search__title">Exclude ingredients</span>
                         <form className="advenced-search__form" onSubmit={e => this.addFilterIngredient(e)}>
-                        <input className="input-small input-small--text" type="text" 
-                          onChange={e => this.onFilterIngredientsInputChange(e.target.value)}
-                          value={this.state.filterIngredientsInput}/>
-                          <button className="input-small__btn" >add</button>              
+                          <input  type="text"
+                            disabled={this.state.addingFiltersDisabled} 
+                            className=
+                            {this.state.addingFiltersDisabled || (!this.state.filterIngredientsInputValid && this.state.filterIngredientsInput!=="") ? 
+                            "input-small input-small--disabled input-small--text" 
+                              :
+                            "input-small input-small--text"} 
+                            onChange={e => this.onFilterIngredientsInputChange(e.target.value)}
+                            value={this.state.filterIngredientsInput}
+                          />
+                          <button className=
+                            {this.state.addingFiltersDisabled || (!this.state.filterIngredientsInputValid && this.state.filterIngredientsInput!=="") ? 
+                            "input-small__btn input-small__btn--disabled"
+                              :
+                            "input-small__btn"}
+                          >add</button>              
                         </form>
                         <ul className="advenced-search__list">
                         {
                           this.state.filterIngredients.map((e, i) => {
                             return  (<li key={i} className="advenced-search__list__item">{e}
                                       <i className="icon-cancel advenced-search__list__item__delete"
-                                      onClick={() => this.deleteFilterProperty('filterIngredients', e)}/>
+                                      onClick={() => this.deleteFilterIngredients(e)}/>
                                     </li>)
                           })
                         }
@@ -333,6 +365,12 @@ export class Header extends React.Component {
 
           {this.props.scrWidth>550 ? (
             <nav className="nav">
+              {this.props.scrWidth<=910 && (
+                <Link onClick={() => this.toggleWhenMobile(false, false)} to="/dashboard" className="header__logo-container header__logo-container--inNav">
+                  <i className="icon-food-1 header__logo header__logo--inNav"/>
+                </Link>
+              )}
+
             <div className={this.state.selected === 'create' ? "nav__item nav__item--selected" : "nav__item"}>
               <Link onClick={() => this.setSelected('create')} to ="/create-recipe" 
                 className="nav__item__link">
@@ -395,13 +433,13 @@ export class Header extends React.Component {
 
               {this.state.mainMenuVisible &&
               (<div className='nav__mobile-menu'>
-                <Link onClick={() => this.toggleMenuWhenMobile()} to ="/create-recipe" className='nav__mobile-menu__item'>
+                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/create-recipe" className='nav__mobile-menu__item'>
                   Create recipe
                 </Link>
-                <Link onClick={() => this.toggleMenuWhenMobile()} to ="/recipes/liked" className='nav__mobile-menu__item'>
+                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/recipes/liked" className='nav__mobile-menu__item'>
                   Liked recipes
                 </Link> 
-                <Link onClick={() => this.toggleMenuWhenMobile()} to ="/recipes/own" className='nav__mobile-menu__item'>
+                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/recipes/own" className='nav__mobile-menu__item'>
                   My recipes
                 </Link>  
               </div>)}

@@ -62,9 +62,11 @@ class PrivateList extends React.Component {
     render() {
         return (
             <div className="private-list" ref='component'>
-                <div className="main-h-container">
+                
+                {this.props.scrWidth>450 && <div className="main-h-container">
                     <h1 className="main-h">{this.state.type==='own' ? "My recipes" : "Liked recipes"}</h1>
-                </div>
+                </div>}
+
                 <div className="private-list__content">
                     {this.props.recipes.length>0 ? 
                         this.getVisibleRecipes(this.state.page).map(e => <div key={e.id} onClick={()=>this.onItemClick(e)}
@@ -84,7 +86,8 @@ class PrivateList extends React.Component {
 };
 
 const mapStateToProps=(state, props)=>({
-    recipes: props.match.params.type==='own' ? state.recipes.ownRecipes : state.recipes.likedRecipes
+    recipes: props.match.params.type==='own' ? state.recipes.ownRecipes : state.recipes.likedRecipes,
+    scrWidth: state.styles.scrWidth
 })
 
 const mapDispatchToProps=(dispatch) => ({

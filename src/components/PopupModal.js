@@ -27,13 +27,13 @@ class PopupModal extends React.Component {
                     contentLabel="Example Modal"
                     onRequestClose={this.props.closeModal}
                     className="popup popup--gradient"
-                    style= {{overlay: {zIndex: 100}}}
+                    style= {{overlay: {zIndex: 100, background: 'linear-gradient(to right bottom, rgba(255,255,255,0.5), rgba(180, 180, 180, 0.5))'}}}
                 >       
                     <i className="popup__close icon-cancel-circled" onClick={this.props.closeModal} />
                     <span className="popup__span">You already have this recipe in shopping list.</span>
                     <div className="popup__btn-container">
-                        <button className="popup__btn popup__btn--2 button button--grey" onClick={() => this.addToExisting()}>Add ingredients to existing shopping list</button>
-                        <button className="popup__btn popup__btn--2 button button--grey" onClick={() => this.overwrite()}>Overwrite existing shopping list</button>                     
+                        <button className="popup__btn popup__btn--2 button button--grey" onClick={() => this.addToExisting()}>Add</button>
+                        <button className="popup__btn popup__btn--2 button button--grey" onClick={() => this.overwrite()}>Overwrite</button>                     
                     </div>                    
                 </Modal>
                 

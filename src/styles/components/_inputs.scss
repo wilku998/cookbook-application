@@ -4,7 +4,7 @@
     border-radius: .75rem;
     background-color: var(--color-grey-light-1);
     font-size: 1.2rem;
-    //flex: 1;
+    flex: 1;
     transition: all .2s;
     
     &--disabled{
@@ -13,6 +13,7 @@
     }
 
     &--nutrients{
+        flex: 0;
         margin-left: $s-size;
         background-color: var(--color-primary-1);
     }
@@ -147,12 +148,12 @@
     &--url{
         padding: 0;
 
-        @media only screen and (max-width: $bp-small){
-            margin-bottom: .8rem;
+        @media only screen and (max-width: $bp-tiny){
         } 
 
         @media only screen and (max-width: $bp-tiny){
             flex-direction: column;
+            margin-bottom: 1rem;
         } 
     }
     &--health{
