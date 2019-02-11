@@ -201,13 +201,15 @@ export class Header extends React.Component {
     }
   }
 
-  toggleWhenMobile(mainMenuVisible, searchVisible){
+  toggleWhenMobile(menu, search){
     !searchVisible && this.toggleAdvencedSearch(false);
-    
+    const searchVisible = search && this.state.searchVisible ? false : search;
+    const mainMenuVisible = menu && this.state.mainMenuVisible ? false : menu;
+
     this.setState((state) => ({
-      searchVisible,
       mainMenuVisible,
-      selected: mainMenuVisible ? 'menu' : searchVisible ? 'search' : state.selected
+      searchVisible,
+      selected: mainMenuVisible ? 'menu' : searchVisible ? 'search' : state.selected==='shopping' ? state.selected : ''
     }))
   }
 

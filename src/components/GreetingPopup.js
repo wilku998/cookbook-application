@@ -1,5 +1,6 @@
 import Modal from 'react-modal';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { storage } from '../firebase/firebase'
 import { sendNameAndAvatarToFirebase } from '../actions/auth';
@@ -83,7 +84,8 @@ class GreetingPopup extends React.Component{
         className="popup popup--first-login"
         shouldCloseOnOverlayClick={false}
         style= {{overlay: {zIndex: 100, background: 'linear-gradient(to right bottom, rgba(255,255,255,0.5), rgba(180, 180, 180, 0.5))',
-        overflowY:'scroll', paddingBottom: '20rem'}}}
+        overflowY:'scroll', overflowX: 'hidden'}}}
+        ref="comp"
         >
             <div className="popup__greeting">
                 <h2 className="popup__greeting__h">Welcome in cookbook app</h2>
@@ -99,7 +101,8 @@ class GreetingPopup extends React.Component{
                 </div>
             </div>
 
-            <input value={this.state.userName} className={this.state.userName==='' ? "popup__input" 
+            <input value={this.state.userName}
+            className={this.state.userName==='' ? "popup__input" 
             : this.state.valid ? "popup__input popup__input--valid" : "popup__input popup__input--invalid"}
                 type="text" placeholder="your name"
                 onChange={(e) => this.onNameChange(e.target.value)}
