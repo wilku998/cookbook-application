@@ -38,13 +38,12 @@ export class Header extends React.Component {
     this.setState({query: e.target.value});
   }
 
-  searchRecipes(){
-    const selector = this.state.searchFrom;
+  searchRecipes(query, selector){
     let request;
     if(selector==='edamam'){
-      request = this.getRecipesFromAPI()
+      request = this.getRecipesFromAPI(query)
     }else if(selector==='users'){
-      request = this.getRecipesFromUsers()
+      request = this.getRecipesFromUsers(query)
     }
 
     request.then((res) => {
@@ -54,7 +53,7 @@ export class Header extends React.Component {
     })
   }
 
-  getRecipesFromUsers(){
+  getRecipesFromUsers(query){
     
     return database.ref('usersRecipes').once('value').then(res => {
       const objFromFirebase = res.val();
@@ -63,7 +62,7 @@ export class Header extends React.Component {
           return {...objFromFirebase[key], id: key}
         })
   
-        return recipes.filter(recipe => {
+        return query === '' ? recipes : recipes.filter(recipe => {
           //seaching for excluded ingredient
           const filterIngredients = this.state.filterIngredients;
           let doesntContainExcludedIgr = true;
@@ -92,7 +91,7 @@ export class Header extends React.Component {
 
           let queryValidation = false;
 
-          if(recipe.label.includes(this.state.query) || recipe.ingredients.findIndex(e => e.ingredient.includes(this.state.query)>-1)){
+          if(recipe.label.includes(query) || recipe.ingredients.findIndex(e => e.ingredient.includes(query)>-1)){
             queryValidation = true;
           }
 
@@ -102,14 +101,13 @@ export class Header extends React.Component {
     })
   }
 
-  getRecipesFromAPI(){
-    const query = `https://api.edamam.com/search?q=${this.state.query}&app_id=${this.props.api.APP_ID}&app_key=
+  getRecipesFromAPI(query){
+    const request = `https://api.edamam.com/search?q=${query}&app_id=${this.props.api.APP_ID}&app_key=
     ${this.props.api.APP_KEY}&to=30${this.state.filterHealthLabels
     .filter(e => e.isActive).map((e) => `&health=${e.parameter}`)}
     ${this.state.filterIngredients.map(e => `&excluded=${e}`)}`.replace(',','');
-    console.log(query)
-//excluded=vinegar&excluded=pretzel
-    return axios(query)
+
+    return axios(request)
     .then((res) => {
       const recipes = res.data.hits.map(e => {
         let recipe = e.recipe;
@@ -125,14 +123,14 @@ export class Header extends React.Component {
     })
   }
 
-  onSubmit(e){
+  onSubmit(e, query, selector){
     e && e.preventDefault();
     if(history.location.pathname !== '/dashboard'){
       history.push('/dashboard');
     }
     this.state.advencedOpen && this.toggleAdvencedSearch(false);
     this.state.searchVisible && this.toggleWhenMobile(false, false);
-    this.searchRecipes();
+    this.searchRecipes(query, selector);
   }
   
   onSelectorChange(selectorValue){
@@ -209,17 +207,11 @@ export class Header extends React.Component {
     this.setState((state) => ({
       mainMenuVisible,
       searchVisible,
-      selected: mainMenuVisible ? 'menu' : searchVisible ? 'search' : state.selected==='shopping' ? state.selected : ''
+      userMenuVisible: false,
+      selected: mainMenuVisible ? 'menu' : searchVisible ? 'search' : ''
     }))
   }
 
-  setSelected(selected){
-    this.setState(() => ({
-      selected
-    }))
-
-    this.toggleAdvencedSearch(false);
-  }
 
   selectSearchFrom(value){
     this.setState((state) => ({
@@ -231,7 +223,10 @@ export class Header extends React.Component {
 
   showUserMenu(property){
     this.setState(() => ({
-      userMenuVisible: property
+      userMenuVisible: property,
+      mainMenuVisible: false,
+      searchVisible: false,
+      selected: ''
     }))
   }
 
@@ -258,7 +253,7 @@ export class Header extends React.Component {
     )
   }
   componentDidMount(){
-    //this.searchRecipes()
+
   }
   render (){
     return (
@@ -275,7 +270,7 @@ export class Header extends React.Component {
               <div className="search-container">
 
                 {(this.props.scrWidth>550 || this.state.searchVisible) &&
-                  (<form className="search" onSubmit={(e) => this.onSubmit(e)}>
+                  (<form className="search" onSubmit={(e) => this.onSubmit(e, this.state.query, this.state.searchFrom)}>
                     <div className="search__more" onClick={() => this.toggleAdvencedSearch(!this.state.advencedOpen)}>
                       <i className={this.state.arrowDown ? "search__icon search__icon--close icon-down-open" : "search__icon icon-down-open"}/>
                     </div>
@@ -302,6 +297,9 @@ export class Header extends React.Component {
                           onChange={(e)=> this.selectSearchFrom(e.target.value)} checked={this.state.searchFrom==="users"}/>
                           <span className="advenced-search__label__option">created by users</span>
                         </label>
+                        <div className="advenced-search__see-all button-inline" onClick={(e) => this.onSubmit(e, '', 'users')}>
+                          <span><i className="icon-eye"/>see all from users</span>
+                        </div>
                     </div>
 
                     <div className="advenced-search__item advenced-search__item--ingredients">
@@ -373,20 +371,21 @@ export class Header extends React.Component {
                 </Link>
               )}
 
-            <div className={this.state.selected === 'create' ? "nav__item nav__item--selected" : "nav__item"}>
-              <Link onClick={() => this.setSelected('create')} to ="/create-recipe" 
+            <div className={history.location.pathname === '/create-recipe' || history.location.pathname.split('/')[1]==='edit-recipe' 
+              ? "nav__item nav__item--selected" : "nav__item"}>
+              <Link onClick={() => this.toggleAdvencedSearch(false)} to ="/create-recipe" 
                 className="nav__item__link">
                 Create recipe<i className="nav__icon icon-plus-circled"/>
               </Link>             
             </div>
-            <div className={this.state.selected === 'own' ? "nav__item nav__item--selected" : "nav__item"}>
-              <Link onClick={() => this.setSelected('own')} to ="/recipes/own" 
+            <div className={history.location.pathname === '/recipes/own' ? "nav__item nav__item--selected" : "nav__item"}>
+              <Link onClick={() => this.toggleAdvencedSearch(false)} to ="/recipes/own" 
                 className="nav__item__link">
                 My recipes<i className="nav__icon icon-food"/>
               </Link>
             </div>
-            <div className={this.state.selected === 'liked' ? "nav__item nav__item--selected" : "nav__item"}>
-              <Link onClick={() => this.setSelected('liked')} to ="/recipes/liked" 
+            <div className={history.location.pathname === '/recipes/liked' ? "nav__item nav__item--selected" : "nav__item"}>
+              <Link onClick={() => this.toggleAdvencedSearch(false)} to ="/recipes/liked" 
                 className="nav__item__link">
                 Likes<i className="nav__icon icon-heart"/>
               </Link>        
@@ -394,8 +393,8 @@ export class Header extends React.Component {
 
             {
               !this.props.twoCompVisible && 
-              (<div className={this.state.selected === 'shopping' ? "nav__item nav__item--selected" : "nav__item"}>
-                <Link onClick={() => this.setSelected('shopping')} to ="/shopping-list" 
+              (<div className={history.location.pathname === '/shopping-list' ? "nav__item nav__item--selected" : "nav__item"}>
+                <Link onClick={() => this.toggleAdvencedSearch(false)} to ="/shopping-list" 
                   className="nav__item__link">
                   Shopping list<i className="nav__icon icon-heart"/>
                 </Link>        
@@ -421,9 +420,8 @@ export class Header extends React.Component {
                   <i className="icon-search-1"/>
                 </span>
               </div>
-              <div className={this.state.selected=== 'shopping' ? "nav__item nav__item--selected" : "nav__item"}
+              <div className={history.location.pathname === '/shopping-list' && this.state.selected==='' ? "nav__item nav__item--selected" : "nav__item"}
                 onClick={() => {
-                  this.setSelected('shopping');
                   this.toggleWhenMobile(false, false)
                   }}>
                 <Link to ="/shopping-list" className="nav__item__link">
@@ -435,13 +433,19 @@ export class Header extends React.Component {
 
               {this.state.mainMenuVisible &&
               (<div className='nav__mobile-menu'>
-                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/create-recipe" className='nav__mobile-menu__item'>
+                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/create-recipe" 
+                className={history.location.pathname === '/create-recipe' || history.location.pathname.split('/')[1]==='edit-recipe' ? 
+                  'nav__mobile-menu__item nav__mobile-menu__item--selected' : 'nav__mobile-menu__item'}>
                   Create recipe
                 </Link>
-                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/recipes/liked" className='nav__mobile-menu__item'>
+                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/recipes/liked" 
+                className={history.location.pathname === '/recipes/liked' ?
+                  'nav__mobile-menu__item nav__mobile-menu__item--selected' : 'nav__mobile-menu__item'}>
                   Liked recipes
                 </Link> 
-                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/recipes/own" className='nav__mobile-menu__item'>
+                <Link onClick={(e) => this.toggleWhenMobile(false, false)} to ="/recipes/own" 
+                className={history.location.pathname === '/recipes/own' ?
+                  'nav__mobile-menu__item nav__mobile-menu__item--selected' : 'nav__mobile-menu__item'}>
                   My recipes
                 </Link>  
               </div>)}

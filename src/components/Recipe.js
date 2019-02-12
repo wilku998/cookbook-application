@@ -4,7 +4,8 @@ import { addToLikedRecipes, incrementOrDecreaseServings, removeFromLiked } from 
 import RecipeHeader from './RecipeHeader';
 import { addIngredients } from '../actions/shoppingList';
 import { sliceIngredientsArr } from '../parsingFunctions/sliceIngredientsArr'
-import PopupModal from './PopupModal'
+import PopupModal from './PopupModal';
+import PopupCreateRecipe from './PopupCreateRecipe';
 import { setLeftSideHeight } from '../actions/styles';
 
 
@@ -14,25 +15,37 @@ class Recipe extends React.Component{
         this.state = {
             formUnit: 'procents',
             modalIsOpen: false,
+            secondModaIsOpen: false
         }
         this.closeModal = this.closeModal.bind(this);
+        this.closeSecondModal = this.closeSecondModal.bind(this);
         this.incrementOrDecreaseServings = this.incrementOrDecreaseServings.bind(this);
     }
     closeModal() {
-        this.setState({modalIsOpen: false});
+        this.setState({
+            modalIsOpen: false,
+        });
     }
 
-    openModal() {
-        this.setState({modalIsOpen: true});
+    closeSecondModal() {
+        this.setState({
+            secondModaIsOpen: false,
+        });
     }
     
     addToShoppingList(){
-        const indexOfRecipeInShoppingList = this.props.shoppingList.findIndex(e => e.from === this.props.recipe.label);
-
-        if(indexOfRecipeInShoppingList===-1){
-            this.props.addToShoppingList(this.props.recipe.ingredients, this.props.recipe.label);
+        if(this.props.shoppingList.length<10){
+            const indexOfRecipeInShoppingList = this.props.shoppingList.findIndex(e => e.from === this.props.recipe.label);
+            if(indexOfRecipeInShoppingList===-1){
+                this.props.addToShoppingList(this.props.recipe.ingredients, this.props.recipe.label);
+            }else{
+                this.setState({modalIsOpen: true,
+                });
+            }
         }else{
-            this.openModal()
+            this.setState(()=>({
+                secondModaIsOpen: true
+            }))
         }
     }
 
@@ -98,6 +111,10 @@ class Recipe extends React.Component{
                 <PopupModal modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal}
                     ingredients={this.props.recipe.ingredients} label={this.props.recipe.label}
                 />
+
+                <PopupCreateRecipe modalIsOpen={this.state.secondModaIsOpen} closeModal={this.closeSecondModal} 
+                message="You reached limit of recipes in shopping list, delete at least one." />
+
                 <RecipeHeader parent="recipe" recipe={this.props.recipe} incrementOrDecreaseServings={this.incrementOrDecreaseServings}/>
                 
                 <div className="recipe__ingredients ingredients">
@@ -179,7 +196,7 @@ class Recipe extends React.Component{
                     :
                     <span className="recipe__footer--column__btn" onClick={() => this.like()}><i className="icon-heart recipe__icon"></i>Like recipe</span>}
                     
-                    {this.props.recipe.url!='' && <a target="_blank" and rel="noopener noreferrer" href={this.props.recipe.url} className="recipe__footer__link">Check full recipe on publisher site</a>}
+                    {this.props.recipe.url!='' && <a target="_blank" rel="noopener noreferrer" href={this.props.recipe.url} className="recipe__footer__link">Check full recipe on publisher site</a>}
                 </div>
             </div>
         )

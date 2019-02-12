@@ -3,7 +3,6 @@ import React from 'react';
 
 const formUnits = ["kg", "g", "pound", "oz", "tsp", "tbsp", "cup", "package", "jar", "none"];
 const AddIngredientForm = (props) => {
-    console.log(props.parent)
     const classs = props.addingDisabled ? "input-small input-small--disabled" : "input-small";
     return (
         <form className={props.parent === 'shopping' ? "add-ingredient-form add-ingredient-form--grey"

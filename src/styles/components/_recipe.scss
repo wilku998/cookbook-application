@@ -199,7 +199,7 @@
     }
 
     &__footer{
-        padding: $m-size;
+        padding: 1.5rem;
         background-color: var(--color-primary-4);
         display: flex;
         justify-content: space-between;
@@ -220,7 +220,7 @@
             align-items: flex-start;
         }
         &__button{
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             padding: .4rem 1.5rem;
             display: flex;
             align-items: center;

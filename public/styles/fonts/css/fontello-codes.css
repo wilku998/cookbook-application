@@ -1,4 +1,5 @@
 
+.icon-eye:before { content: '\e800'; } /* '' */
 .icon-plus-circled:before { content: '\e801'; } /* '' */
 .icon-basket:before { content: '\e802'; } /* '' */
 .icon-adult:before { content: '\e803'; } /* '' */

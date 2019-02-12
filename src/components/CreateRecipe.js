@@ -138,7 +138,7 @@ class CreateRecipe extends React.Component {
 
     addIngredient(event){
         event.preventDefault();
-        if(this.state.validForm){
+        if(this.state.validForm && this.state.recipe.ingredients.length<20){
             const index = this.state.recipe.ingredients.findIndex(e => e.ingredient === this.state.formIngredient && e.unit === this.state.formUnit)
             let ingredients;
             if(index===-1){
@@ -173,16 +173,17 @@ class CreateRecipe extends React.Component {
                 recipe: {...recipe, ingredients},
                 formCount: 1,
                 formUnit: 'kg',
-                formIngredient: ''
+                formIngredient: '',
             }))
         }
     }
 
-    removeIngredient(ingredient, unit ){
+    removeIngredient(ingredient, count, unit){
+        console.log(ingredient, count, unit)
         this.setState(({recipe} = state) => ({
             recipe: {
                 ...recipe,
-                ingredients: recipe.ingredients.filter(e => e.ingredient!==ingredient && e.unit!==unit)
+                ingredients: recipe.ingredients.filter(e => !(e.ingredient===ingredient && e.unit===unit))
             }
         }))
     }
@@ -385,7 +386,9 @@ class CreateRecipe extends React.Component {
                     <AddIngredientForm addIngredient={this.addIngredient} onAddCountChange={this.onAddCountChange} onAddUnitChange={this.onAddUnitChange}
                         onAddIngredientChange={this.onAddIngredientChange}
                         formCount={this.state.formCount} formUnit={this.state.formUnit} formIngredient={this.state.formIngredient}
-                        lines={this.props.scrWidth<=350 ? 2 : 1} addingDisabled={this.state.formIngredient==="" ? false : !this.state.validForm}
+                        lines={this.props.scrWidth<=350 ? 2 : 1}
+                        addingDisabled={(this.state.formIngredient==="" ? false : !this.state.validForm) ||
+                        this.state.recipe.ingredients.length>=20}
                     />
 
 

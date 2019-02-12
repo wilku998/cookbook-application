@@ -62,11 +62,12 @@ body{
     &-container{
         background-image: linear-gradient(to right bottom, var(--color-primary-4-5), var(--color-primary-4));
     }
+    line-height: 1;
     margin: 0;
     text-align: center;
     font-size: 5rem;
     font-weight: 400;
-    padding: 1.5rem 0;
+    padding: 2.5rem 0;
     text-transform: uppercase;
     letter-spacing: 1rem;
     transition: all .2s;
@@ -78,6 +79,7 @@ body{
     &:hover{
         letter-spacing: 1.2rem;
     }
+
 }
 
 .loader{

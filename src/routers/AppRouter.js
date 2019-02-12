@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Router, Route, Switch, Link, NavLink } from 'react-router-dom';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 import PrivateRoute from './PrivateRoute';
 import ShoppingListRouter from './ShoppingListRouter';
@@ -31,6 +31,8 @@ const AppRouter = ({auth}) => {
         <PrivateRoute path="/create-recipe" component={CreateRecipe} />
         <PrivateRoute path="/edit-recipe/:id" component={CreateRecipe} />
         <ShoppingListRouter path="/shopping-list" component={ShoppingList} />
+        
+        <Redirect to="/dashboard" />
       </Switch>
     </div>
   </Router>

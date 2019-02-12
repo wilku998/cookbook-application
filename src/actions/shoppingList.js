@@ -211,11 +211,9 @@ export const removeIngredient = (from, ingredient, count, unit) => {
         let recipes;
 
         if(from==='all'){
-            allIngredients = state.allIngredients.filter(e => {
-                return e.ingredient!==ingredient
-            })
+            allIngredients = state.allIngredients.filter(e => !(e.ingredient===ingredient && e.unit===unit))
             recipes = state.recipes.map(recipe => {
-                return {...recipe, ingredients: recipe.ingredients.filter(e => e.ingredient!==ingredient && e.unit!==unit)}
+                return {...recipe, ingredients: recipe.ingredients.filter(e => !(e.ingredient===ingredient && e.unit===unit))}
             })
 
              
