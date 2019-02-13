@@ -16,6 +16,11 @@ export default (state = {leftSideHeight: 0, twoCompVisible: true, scrWidth: 0}, 
             twoCompVisible: action.twoCompVisible,
             scrWidth: action.scrWidth
         };
+    case 'SET_FETCHING_DATA_VAR':
+        return {
+            ...state,
+            fetchingData: action.val
+        }
       default:
         return state;
     }

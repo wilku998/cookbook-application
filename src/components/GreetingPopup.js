@@ -9,7 +9,7 @@ class GreetingPopup extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            modalIsOpen: !this.props.user.userName && !!this.props.user.uid,
+            modalIsOpen: props.isNew,
             img: 'https://firebasestorage.googleapis.com/v0/b/recipes-app-4f6e6.appspot.com/o/user-default.png?alt=media&token=3b0e5895-56cb-4f27-b944-739ba04cd475',
             userName: '',
             submittingDisabled: false,
@@ -70,11 +70,11 @@ class GreetingPopup extends React.Component{
     }
 
     componentWillReceiveProps(props){
-        this.setState(() => ({
-            modalIsOpen: !props.user.userName && !!props.user.uid,
-            userName: '',
-        }))
+            this.setState(()=> ({
+                modalIsOpen: props.isNew
+            }))
     }
+
     render(){
     return (
         <Modal
@@ -116,15 +116,15 @@ class GreetingPopup extends React.Component{
     }
 }
 
-const mapStateToProps = (state) => {
-    return ({
-        user: state.auth
-    })
-}
-
 const mapDispatchToProps = (dispatch) => {
     return ({
         sendNameAndAvatarToFirebase: (userInfo) => dispatch(sendNameAndAvatarToFirebase(userInfo))
+    })
+}
+
+const mapStateToProps = (state) => {
+    return ({
+        isNew: state.auth.isNew
     })
 }
 

@@ -45,7 +45,10 @@ const renderApp = () => {
   }
 };
 
-ReactDOM.render(<LoadingPage />, document.getElementById('app'));
+const renderLoading = () => {
+  ReactDOM.render(<LoadingPage />, document.getElementById('app'));
+} 
+renderLoading();
 
 firebase.auth().onAuthStateChanged((user) => {
 
@@ -105,8 +108,9 @@ firebase.auth().onAuthStateChanged((user) => {
         }
       });
     }else{
-      history.push('/dashboard');
       renderApp();
+      store.dispatch({type: "IS_NEW"})
+      history.push('/dashboard');
     }
   })  
   }else {

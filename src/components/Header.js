@@ -39,66 +39,24 @@ export class Header extends React.Component {
   }
 
   searchRecipes(query, selector){
-    let request;
     if(selector==='edamam'){
-      request = this.getRecipesFromAPI(query)
+      this.getRecipesFromAPI(query).then((res) => {
+        set(this.parseEdemamRecipes(res))
+      })
     }else if(selector==='users'){
-      request = this.getRecipesFromUsers(query)
+      this.getRecipesFromUsers().then((res) => {
+        set(this.parseUsersRecipes(res, query));
+      })
     }
 
-    request.then((res) => {
-      if(res){
-        this.props.setSearchedRecipes(res);
-      }
-    })
+    const set = (respond) => {
+      this.props.setSearchedRecipes(respond);
+      this.props.setFetchingDataVar(false);
+    }
   }
 
-  getRecipesFromUsers(query){
-    
-    return database.ref('usersRecipes').once('value').then(res => {
-      const objFromFirebase = res.val();
-      if(!!objFromFirebase){
-        const recipes = Object.keys(objFromFirebase).map(key => {
-          return {...objFromFirebase[key], id: key}
-        })
-  
-        return query === '' ? recipes : recipes.filter(recipe => {
-          //seaching for excluded ingredient
-          const filterIngredients = this.state.filterIngredients;
-          let doesntContainExcludedIgr = true;
-          if(filterIngredients.length>0){
-            filterIngredients.forEach(filter => {
-              recipe.ingredients.forEach(igr => {
-                if(igr.ingredient.includes(filter)){
-                  doesntContainExcludedIgr = false
-                }
-              })
-            })
-          }
-  
-          //checking if recipe has each filter helath label
-          let healthLabelsValidation = true;
-          const filterHealthLabels = this.state.filterHealthLabels.filter(e => e.isActive).map(e => e.parameter);
-
-          if(filterHealthLabels.length>0){
-            const dontFoundedLabelIndex = filterHealthLabels.map(filter => {
-              return recipe.healthLabels.map(e => e.parameter).includes(filter)
-            }).findIndex(e => e===false)
-            if(dontFoundedLabelIndex>-1){
-              healthLabelsValidation = false;
-            }
-          }
-
-          let queryValidation = false;
-
-          if(recipe.label.includes(query) || recipe.ingredients.findIndex(e => e.ingredient.includes(query)>-1)){
-            queryValidation = true;
-          }
-
-          return doesntContainExcludedIgr && healthLabelsValidation && queryValidation
-        })
-      }
-    })
+  getRecipesFromUsers(){
+    return database.ref('usersRecipes').once('value')
   }
 
   getRecipesFromAPI(query){
@@ -108,19 +66,62 @@ export class Header extends React.Component {
     ${this.state.filterIngredients.map(e => `&excluded=${e}`)}`.replace(',','');
 
     return axios(request)
-    .then((res) => {
-      const recipes = res.data.hits.map(e => {
-        let recipe = e.recipe;
-        recipe.ingredients = recipe.ingredientLines;
-        recipe.servings = recipe.yield;
-        delete recipe.ingredientLines;
-        delete recipe.yield;
+  }
+
+  parseUsersRecipes(res, query){
+    const objFromFirebase = res.val();
+    if(!!objFromFirebase){
+      const recipes = Object.keys(objFromFirebase).map(key => {
+        return {...objFromFirebase[key], id: key}
+      })
+
+      return recipes.filter(recipe => {
+        //seaching for excluded ingredient
+        const filterIngredients = this.state.filterIngredients;
+        let doesntContainExcludedIgr = true;
+        if(filterIngredients.length>0){
+          filterIngredients.forEach(filter => {
+            recipe.ingredients.forEach(igr => {
+              if(igr.ingredient.includes(filter)){
+                doesntContainExcludedIgr = false
+              }
+            })
+          })
+        }
+
+        //checking if recipe has each filter helath label
+        let healthLabelsValidation = true;
+        const filterHealthLabels = this.state.filterHealthLabels.filter(e => e.isActive).map(e => e.parameter);
+
+        if(filterHealthLabels.length>0){
+          const dontFoundedLabelIndex = filterHealthLabels.map(filter => {
+            return recipe.healthLabels.map(e => e.parameter).includes(filter)
+          }).findIndex(e => e===false)
+          if(dontFoundedLabelIndex>-1){
+            healthLabelsValidation = false;
+          }
+        }
+
+        let queryValidation = false;
+
+        if(recipe.label.includes(query) || recipe.ingredients.findIndex(e => e.ingredient.includes(query)>-1)){
+          queryValidation = true;
+        }
+
+        return doesntContainExcludedIgr && healthLabelsValidation && queryValidation
+      })
+    }
+  }
+
+  parseEdemamRecipes(res){
+    return res.data.hits.map(e => {
+      let recipe = e.recipe;
+      recipe.ingredients = recipe.ingredientLines;
+      recipe.servings = recipe.yield;
+      delete recipe.ingredientLines;
+      delete recipe.yield;
       return recipe
-      });
-      return recipes
-    }).catch((error)=>{
-      console.log(error);
-    })
+    });
   }
 
   onSubmit(e, query, selector){
@@ -128,6 +129,7 @@ export class Header extends React.Component {
     if(history.location.pathname !== '/dashboard'){
       history.push('/dashboard');
     }
+    this.props.setFetchingDataVar(true);
     this.state.advencedOpen && this.toggleAdvencedSearch(false);
     this.state.searchVisible && this.toggleWhenMobile(false, false);
     this.searchRecipes(query, selector);
@@ -297,7 +299,7 @@ export class Header extends React.Component {
                           onChange={(e)=> this.selectSearchFrom(e.target.value)} checked={this.state.searchFrom==="users"}/>
                           <span className="advenced-search__label__option">created by users</span>
                         </label>
-                        <div className="advenced-search__see-all button-inline" onClick={(e) => this.onSubmit(e, '', 'users')}>
+                        <div className="advenced-search__see-all button-inline" onClick={(e) => {}}>
                           <span><i className="icon-eye"/>see all from users</span>
                         </div>
                     </div>
@@ -469,7 +471,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setSearchedRecipes: (recipes) => dispatch(setSearchedRecipes(recipes)),
-    startLogout: () => dispatch(startLogout())
+    startLogout: () => dispatch(startLogout()),
+    setFetchingDataVar: (val) => dispatch({type:"SET_FETCHING_DATA_VAR", val})
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

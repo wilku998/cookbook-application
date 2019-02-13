@@ -138,7 +138,8 @@ class Recipe extends React.Component{
                         })}
                     </div>
                 </div>
-                <div className="recipe__ingredients recipe__ingredients--darken ingredients">
+                <div className={`recipe__ingredients ${this.props.recipe.fromUser ? 'recipe__ingredients--health' : 'recipe__ingredients--health--darken'} ingredients`}
+                >
                     <h3 className="recipe__ingredients__title">Health labels</h3>
                         <div className="ingredients-container">
                             {

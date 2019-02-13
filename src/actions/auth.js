@@ -8,13 +8,13 @@ export const login = (uid) => ({
 
 export const startLoginWithGoogle = () => {
   return () => {
-    return firebase.auth().signInWithPopup(googleAuthProvider);
+    return firebase.auth().signInWithPopup(googleAuthProvider)
   };
 };
 
 export const startLoginWithFacebook = () => {
   return () => {
-    return firebase.auth().signInWithPopup(facebookAuthProvider);
+    return firebase.auth().signInWithPopup(facebookAuthProvider)
   };
 };
 

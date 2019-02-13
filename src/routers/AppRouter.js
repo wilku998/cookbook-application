@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
 import ShoppingListRouter from './ShoppingListRouter';
 import DashboardPage from '../components/DashboardPage';
 import Recipe from '../components/Recipe'
@@ -10,20 +11,19 @@ import PrivateList from '../components/PrivateList';
 import LoginPage from '../components/LoginPage'
 import CreateRecipe from '../components/CreateRecipe'
 import ShoppingList from '../components/ShoppingList';
-import GreetingPopup from '../components/GreetingPopup';
 import Header from '../components/Header';
+import GreetingPopup from '../components/GreetingPopup';
 
 export const history = createHistory();
 const AppRouter = ({auth}) => {
-  console.log()
+  console.log(auth)
   return(
   <Router history={history}>
     <div>
       {auth.userName && (<Header />)}
-      {!auth.userName && (<GreetingPopup />)}
-      
+      <GreetingPopup />
       <Switch>
-        <Route path="/" component={LoginPage} exact={true} />
+        <PublicRoute path="/" component={LoginPage} exact={true} />
         <PrivateRoute path="/dashboard" component={DashboardPage} />
         <PrivateRoute path="/recipe/:name" component={Recipe} exact={true}/>
         <PrivateRoute path="/recipe/fromUsers/:id" component={Recipe} />
