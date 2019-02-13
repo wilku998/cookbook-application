@@ -102,7 +102,15 @@ class Recipe extends React.Component{
     }
 
     componentDidMount(){
-        this.props.setLeftSideHeight(this.refs.component);
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+          });
+
+        if(this.props.scrWidth>910){
+            this.props.setLeftSideHeight(this.refs.component);
+        }
     }
     
     render(){

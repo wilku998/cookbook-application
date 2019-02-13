@@ -1,24 +1,30 @@
 import { unitsShort } from './parseIngredients'
 
-export default (ingredient) => {
+export default (ing) => {
     const units = unitsShort;
+    let ingredient;
+
+    ['¼', '½','¾'].forEach((e,i) => {
+        const count = i === 0 ? 0.25 : i === 1 ? 0.5 : 0.75;
+        ingredient = ing.replace(e, count)
+    })
+
+    console.log(ing)
     let objIng = {};
     // checking if there is a unit
     let ingredientArr = ingredient.split(' ');
     const unitIndex = ingredientArr.findIndex((e) => {
         return units.includes(e)
     })
-    
+
     //there is a unit
     if(unitIndex>-1){
         const countArr = ingredientArr.slice(0, unitIndex);
+
         if( countArr.length===2){
-            countArr.forEach((count, i) => {
-                countArr[i] = count === '½' ? 1/2 : count
-            })
-            objIng.count=Math.round(eval(`${countArr[0]}+${countArr[1]}`)*10)/10;
+            objIng.count= isNaN(countArr[0]) || isNaN(countArr[1]) ? 1 : Math.round(eval(`${countArr[0]}+${countArr[1]}`)*10)/10;
         }else{
-            objIng.count=Math.round(eval(countArr[0].replace('-', '+'))*10)/10;
+            objIng.count= isNaN(countArr[0]) ? 1 : Math.round(eval(countArr[0].replace('-', '+'))*10)/10;
         }
         objIng.unit = ingredientArr[unitIndex]
         objIng.ingredient = ingredientArr.slice(unitIndex+1).join(" ");

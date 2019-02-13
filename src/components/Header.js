@@ -9,6 +9,7 @@ import database from '../firebase/firebase';
 import { healthLabels } from '../data/healthLables';
 import { ingredientValidation } from '../validation/ingredientsValidation'
 
+const defaultHealthLabels = healthLabels.map(e => ({...e, isActive: false}));
 
 export class Header extends React.Component {
   constructor(props){
@@ -20,7 +21,7 @@ export class Header extends React.Component {
       searchFrom: 'edamam',
       advencedOpen: false,
       animationOfHidingAdvencedSearch: false,
-      filterHealthLabels: healthLabels.map(e => ({...e, isActive: false})),
+      filterHealthLabels: defaultHealthLabels,
       filterIngredients: [],
       filterIngredientsInput: '',
       filterHealthLabelsInput: '',
@@ -30,7 +31,8 @@ export class Header extends React.Component {
       selected: '',
       filterIngredientsInputValid: false,
       arrowDown: false,
-      addingFiltersDisabled: true
+      addingFiltersDisabled: true,
+      limitHealthLabels: 2
     }
   }
 
@@ -41,20 +43,27 @@ export class Header extends React.Component {
   searchRecipes(query, selector){
     if(selector==='edamam'){
       this.getRecipesFromAPI(query).then((res) => {
-        set(this.parseEdemamRecipes(res))
+        this.set(this.parseEdemamRecipes(res))
       })
     }else if(selector==='users'){
       this.getRecipesFromUsers().then((res) => {
-        set(this.parseUsersRecipes(res, query));
+        this.set(this.filterRecipesFromUsers(this.parseUsersRecipes(res), query));
       })
-    }
-
-    const set = (respond) => {
-      this.props.setSearchedRecipes(respond);
-      this.props.setFetchingDataVar(false);
     }
   }
 
+  searchAllFromUsers(){
+    this.prepareBeforeSearch()
+
+    this.getRecipesFromUsers().then((res) => {
+      this.set(this.parseUsersRecipes(res));
+    })
+  }
+
+  set(respond){
+    respond !== [] && this.props.setSearchedRecipes(respond);
+    this.props.setFetchingDataVar(false);
+  }
   getRecipesFromUsers(){
     return database.ref('usersRecipes').once('value')
   }
@@ -68,51 +77,54 @@ export class Header extends React.Component {
     return axios(request)
   }
 
-  parseUsersRecipes(res, query){
+  parseUsersRecipes(res){
     const objFromFirebase = res.val();
     if(!!objFromFirebase){
-      const recipes = Object.keys(objFromFirebase).map(key => {
+      return Object.keys(objFromFirebase).map(key => {
         return {...objFromFirebase[key], id: key}
-      })
-
-      return recipes.filter(recipe => {
-        //seaching for excluded ingredient
-        const filterIngredients = this.state.filterIngredients;
-        let doesntContainExcludedIgr = true;
-        if(filterIngredients.length>0){
-          filterIngredients.forEach(filter => {
-            recipe.ingredients.forEach(igr => {
-              if(igr.ingredient.includes(filter)){
-                doesntContainExcludedIgr = false
-              }
-            })
-          })
-        }
-
-        //checking if recipe has each filter helath label
-        let healthLabelsValidation = true;
-        const filterHealthLabels = this.state.filterHealthLabels.filter(e => e.isActive).map(e => e.parameter);
-
-        if(filterHealthLabels.length>0){
-          const dontFoundedLabelIndex = filterHealthLabels.map(filter => {
-            return recipe.healthLabels.map(e => e.parameter).includes(filter)
-          }).findIndex(e => e===false)
-          if(dontFoundedLabelIndex>-1){
-            healthLabelsValidation = false;
-          }
-        }
-
-        let queryValidation = false;
-
-        if(recipe.label.includes(query) || recipe.ingredients.findIndex(e => e.ingredient.includes(query)>-1)){
-          queryValidation = true;
-        }
-
-        return doesntContainExcludedIgr && healthLabelsValidation && queryValidation
       })
     }
   }
 
+  filterRecipesFromUsers(recipes, query){
+    return recipes.filter(recipe => {
+      //seaching for excluded ingredient
+      const filterIngredients = this.state.filterIngredients;
+      let doesntContainExcludedIgr = true;
+      if(filterIngredients.length>0){
+        filterIngredients.forEach(filter => {
+          recipe.ingredients.forEach(igr => {
+            if(igr.ingredient.includes(filter)){
+              doesntContainExcludedIgr = false
+            }
+          })
+        })
+      }
+
+      //checking if recipe has each filter helath label
+      let healthLabelsValidation = true;
+      const filterHealthLabels = this.state.filterHealthLabels.filter(e => e.isActive).map(e => e.parameter);
+
+      if(filterHealthLabels.length>0){
+        const dontFoundedLabelIndex = filterHealthLabels.map(filter => {
+          return recipe.healthLabels.map(e => e.parameter).includes(filter)
+        }).findIndex(e => e===false)
+        if(dontFoundedLabelIndex>-1){
+          healthLabelsValidation = false;
+        }
+      }
+
+      let queryValidation = false;
+
+      query.split(' ').forEach((el) => {
+        if(recipe.label.includes(el) || (recipe.ingredients.findIndex(e => e.ingredient.includes(el))>-1)){
+          queryValidation = true;
+        }
+      })
+
+      return doesntContainExcludedIgr && healthLabelsValidation && queryValidation
+    })
+  }
   parseEdemamRecipes(res){
     return res.data.hits.map(e => {
       let recipe = e.recipe;
@@ -126,15 +138,19 @@ export class Header extends React.Component {
 
   onSubmit(e, query, selector){
     e && e.preventDefault();
+    this.prepareBeforeSearch()
+    this.searchRecipes(query, selector);
+  }
+
+  prepareBeforeSearch(){
     if(history.location.pathname !== '/dashboard'){
       history.push('/dashboard');
     }
     this.props.setFetchingDataVar(true);
     this.state.advencedOpen && this.toggleAdvencedSearch(false);
     this.state.searchVisible && this.toggleWhenMobile(false, false);
-    this.searchRecipes(query, selector);
   }
-  
+
   onSelectorChange(selectorValue){
     this.setState(() => ({
       selectorValue
@@ -216,10 +232,14 @@ export class Header extends React.Component {
 
 
   selectSearchFrom(value){
+    const filteredHealthLabels = this.state.filterHealthLabels.filter(e => e.isActive)
+
     this.setState((state) => ({
       searchFrom: value,
       addingFiltersDisabled: value==='edamam',
-      filterIngredients: value==='edamam' ? [] : state.filterIngredients
+      filterIngredients: value==='edamam' ? [] : state.filterIngredients,
+      limitHealthLabels: value === "edamam" ? 2 : 6,
+      filterHealthLabels: value==='edamam' && filteredHealthLabels.length>2 ? defaultHealthLabels : state.filterHealthLabels
     }))
   }
 
@@ -233,9 +253,13 @@ export class Header extends React.Component {
   }
 
   switchModeOfHealthLabel(toSwitch){
-    this.setState(state =>({
-      filterHealthLabels: state.filterHealthLabels.map(e => e.label===toSwitch.label ? {...e, isActive: !e.isActive} : e)
-    }))
+    const filterHealthLabels = this.state.filterHealthLabels.map(e => e.label===toSwitch.label ? {...e, isActive: !e.isActive} : e)
+
+    if(filterHealthLabels.filter(e => e.isActive).length<=this.state.limitHealthLabels){
+      this.setState(() =>({
+        filterHealthLabels
+      }))
+    }
   }
 
   renderNavUser(name){
@@ -299,7 +323,7 @@ export class Header extends React.Component {
                           onChange={(e)=> this.selectSearchFrom(e.target.value)} checked={this.state.searchFrom==="users"}/>
                           <span className="advenced-search__label__option">created by users</span>
                         </label>
-                        <div className="advenced-search__see-all button-inline" onClick={(e) => {}}>
+                        <div className="advenced-search__see-all button-inline" onClick={() => {this.searchAllFromUsers()}}>
                           <span><i className="icon-eye"/>see all from users</span>
                         </div>
                     </div>

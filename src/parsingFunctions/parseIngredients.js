@@ -1,7 +1,7 @@
-export const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound', 'jars', 'packages', 'g', 'g', 'kg', 'kg'];
+export const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound', 'jar', 'package', 'g', 'g', 'kg', 'kg'];
 
 export default (ingredients) => {
-    const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds', 'jar', 'package', 'grams', 'gram', 'kilograms', 'kilogram'];
+    const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds', 'jars', 'packages', 'grams', 'gram', 'kilograms', 'kilogram'];
     
     const newIngredients = ingredients.map(el => {
         let ingredient = el.toLowerCase();

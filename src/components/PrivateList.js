@@ -53,10 +53,9 @@ class PrivateList extends React.Component {
     }
 
     componentDidMount(){
-        this.props.setLeftSideHeight(this.refs.component)
-    }
-    componentDidUpdate(){
-        this.props.setLeftSideHeight(this.refs.component)
+        if(this.props.scrWidth>910){
+            this.props.setLeftSideHeight(this.refs.component)
+        }
     }
 
     render() {

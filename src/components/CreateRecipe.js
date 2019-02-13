@@ -271,6 +271,11 @@ class CreateRecipe extends React.Component {
 
             this.props.addOwnRecipe(recipe, id, isEdited).then(() => {
                 history.push('/recipes/own')
+                window.scroll({
+                    top: 0,
+                    left: 0,
+                    behavior: 'smooth'
+                  });
             })
 
         }else{
@@ -314,9 +319,9 @@ class CreateRecipe extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-        if(prevState.recipe.ingredients.length !== this.state.recipe.ingredients.length
+        if((prevState.recipe.ingredients.length !== this.state.recipe.ingredients.length
             ||
-        prevState.recipe.healthLabels.length !== this.state.recipe.healthLabels.length){
+        prevState.recipe.healthLabels.length !== this.state.recipe.healthLabels.length) && this.props.scrWidth>910){
             this.props.setLeftSideHeight(this.refs.component)
         }
     }

@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 
 class GreetingComponent extends React.Component{
     componentDidMount(){
-        this.props.setLeftSideHeight(this.refs.component)
+        if(this.props.scrWidth>910){
+            this.props.setLeftSideHeight(this.refs.component)
+        }
     }
     render(){
         return (
@@ -68,8 +70,11 @@ class GreetingComponent extends React.Component{
         )
     }
 }
+const mapStateToProps = (state) => ({
+    scrWidth: state.styles.scrWidth
+})
 
 const mapDispatchToProps = (dispatch) => ({
     setLeftSideHeight: (refs) => dispatch(setLeftSideHeight(refs))
 })
-export default connect(undefined, mapDispatchToProps)(GreetingComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(GreetingComponent);

@@ -33,15 +33,22 @@ export class RecipesList extends React.Component {
     return selectedRecipes
   }
 
-  componentDidMount(){
-    this.props.setLeftSideHeight(this.refs.component);
-  }
-
   getLimit(scrWidth){
     return scrWidth<=550 && scrWidth>350 ? 8 : 9
   }
+  
+  setHeight(){
+    if(this.props.scrWidth>910){
+      this.props.setLeftSideHeight(this.refs.component)
+    }
+  }
+
+  componentDidMount(){
+    this.setHeight()
+  }
+
   componentDidUpdate(){
-    this.props.setLeftSideHeight(this.refs.component);
+    this.setHeight()
     
   }
 
