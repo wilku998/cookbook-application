@@ -33,7 +33,7 @@ class GreetingComponent extends React.Component{
                 <div className="dashboard__left">
                     <h2 className="dashboard__h">Guides</h2>
                     <div className="dashboard__section">
-                    <p className="dashboard__p dashboard__p--left">Expand the search bar on top of the website to select from which database you want to search recipes. You can also choose the health label that you are interested in and also exclude ingredients you don't want.</p>            
+                    <p className="dashboard__p dashboard__p--left">Expand the search bar on top of the website to select from which database you want to search recipes. You can also choose the health label that you are interested in and also exclude ingredients you don't want. If you want add ingredients to shopping list choose "all" option in selector.</p>            
                     <i className="dashboard__icon dashboard__icon--dark icon-book"/>
                     </div>
                 </div>

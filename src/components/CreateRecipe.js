@@ -50,7 +50,6 @@ class CreateRecipe extends React.Component {
         task.on('state_changed',
         (snapshot)=>{
             const percentage = Math.round((snapshot.bytesTransferred / snapshot.totalBytes)*100)
-            console.log(percentage);
             this.setState(()=>({
                 addingDisabled: true,
                 percentage
@@ -90,8 +89,7 @@ class CreateRecipe extends React.Component {
             property= 'imageHeightInput';
             value = window.getComputedStyle(ReactDOM.findDOMNode(this.refs.imageInput)).getPropertyValue("height");
         }
-        console.log(property)
-        console.log(value)
+
         this.setState(() => ({
             [property]: value
         }))

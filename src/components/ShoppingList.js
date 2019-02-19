@@ -45,7 +45,6 @@ class ShoppingList extends React.Component{
                 }
             })
         })
-        console.log({count, ingredient, unit})
         return count>=sumOfSameCounts || this.state.selectorValue!='all'
     }
 

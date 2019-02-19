@@ -80,7 +80,7 @@ const changeCountInAll = (allIngredientsFromState, action) => {
       
       allIngredientsFromState[ingredientToChangeIndex] = {
         ...allIngredientsFromState[ingredientToChangeIndex],
-        count
+        count: count>100 && action.unit!=='g' ? 100 : count>1000 && action.unit==='g' ? 1000 : count
       }  
     }
     return allIngredientsFromState
@@ -94,7 +94,6 @@ export const changeCountInRedux = (allIngredients, recipes) => ({
 
 export const changeCount = (from, ingredient, count, unit, sign, diffrence) => {
     return (dispatch, getState) => {
-      console.log({from, ingredient, count, unit, sign, diffrence})
         const uid = getState().auth.uid;
         const state = getState().shoppingList;
 
@@ -178,9 +177,9 @@ export const removeAllIngredients = (from) => {
                 return recipe.from !== from
             })
         }
-        return database.ref(`users/${uid}/shoppingList`).set({allIngredients, recipes}).then(() => {
-            dispatch(removeAllIngredientsInRedux({allIngredients, recipes}));
-        })
+      return database.ref(`users/${uid}/shoppingList`).set({allIngredients, recipes}).then(() => {
+          dispatch(removeAllIngredientsInRedux({allIngredients, recipes}));
+      })
     }
 }
 
@@ -259,47 +258,8 @@ export const overwriteShoppingListInRedux = (state) => ({
 
 export const overwriteShoppingList = (ingredients, from) => {
     return(dispatch, getState) => {
-        const uid = getState().auth.uid;
-        const state = getState().shoppingList;
-
-        const allIngredients = state.allIngredients.map(igr => {
-            let countFromRecipeInShoppingList = 0;
-            let actionCount;
-
-            ingredients.forEach(igrFromAction => {
-              if(igrFromAction.ingredient === igr.ingredient && igrFromAction.unit === igr.unit){
-                actionCount = igrFromAction.count
-
-                const recipeInShoppingList = state.recipes.find(e => e.from === from).ingredients
-                .find(el => el.ingredient===igrFromAction.ingredient && el.unit===igrFromAction.unit);
-
-                countFromRecipeInShoppingList = recipeInShoppingList ? recipeInShoppingList.count : 0
-              }
-            })
-
-            if(countFromRecipeInShoppingList!==0){
-              return {
-                ...igr,
-                count: parseInt((igr.count - countFromRecipeInShoppingList + actionCount)*10)/10
-              }
-            }else{
-              return igr
-            }
-          })
-
-          const recipes = state.recipes.map(recipe => {
-            if(recipe.from === from){
-              return {
-                ...recipe,
-                ingredients: ingredients
-              }
-            }else{
-              return recipe
-            }
-          })
-
-          database.ref(`users/${uid}/shoppingList`).set({allIngredients, recipes}).then(() => {
-              dispatch(overwriteShoppingListInRedux({allIngredients, recipes}))
-          })
+      dispatch(removeAllIngredients(from)).then(() => {
+        dispatch(addIngredients(ingredients, from))
+      })
     }
 }

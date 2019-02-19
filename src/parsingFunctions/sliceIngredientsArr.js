@@ -1,5 +1,4 @@
 export const sliceIngredientsArr = (ingredients, parent) =>{
-    console.log(ingredients)
     const half = Math.ceil(ingredients.length/2);
 
     let sortIngredients=(arr) => {
