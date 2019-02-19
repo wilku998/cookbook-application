@@ -93,10 +93,10 @@ class AddIngredientForm extends React.Component{
                         </select>
                     </label>
                     {this.props.lines===1 &&
-                    (<label className="label">
+                    (<label className="label label--ingredient">
                         <span className="label__text">Ingredient</span>
-                        <div className="label__containerForInputBtn">
-                            <input className={`${classs} input-small--withBtn`} type="text" 
+                        <div className="label__containerForInputBtn label__containerForInputBtn--big">
+                            <input className={`${classs} input-small--ingredient input-small--withBtn`} type="text" 
                             value={this.state.formIngredient} 
                             onChange={(e) => this.onAddIngredientChange(e.target.value)}
                             />
@@ -113,7 +113,7 @@ class AddIngredientForm extends React.Component{
                 {this.props.lines===2 &&
                     (<label className="add-ingredient-form__down">
                         <span className="label__text">Ingredient</span>
-                        <input className={`${classs} input-small--withBtn`} type="text" 
+                        <input className={`${classs} input-small--ingredient input-small--withBtn`} type="text" 
                         value={this.state.formIngredient} 
                         onChange={(e) => this.onAddIngredientChange(e.target.value)} />
                         <button className={this.state.addingDisabled || this.props.disabled ? "input-small__btn input-small__btn--disabled" : "input-small__btn"}>add</button>

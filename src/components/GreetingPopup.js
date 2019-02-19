@@ -27,7 +27,7 @@ class GreetingPopup extends React.Component{
     
     fileSelection(e){
       let file = e.target.files[0];
-      const ref = storage.ref(`users/${this.props.user.uid}/avatar`);
+      const ref = storage.ref(`users/${this.props.uid}/avatar`);
       const task = ref.put(file);
 
       task.on('state_changed',
@@ -124,7 +124,8 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state) => {
     return ({
-        isNew: state.auth.isNew
+        isNew: state.auth.isNew,
+        uid: state.auth.uid
     })
 }
 

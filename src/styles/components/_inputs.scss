@@ -38,6 +38,9 @@
         }
     }
 
+    &--ingredient{
+        width: 100%;
+    }
     &--withBtn{
         padding: .5rem 3.5rem .5rem 1.5rem;
     }
@@ -128,6 +131,7 @@
 
     @media only screen and (max-width: $bp-small){
         flex-direction: column;
+        align-items: stretch;
     }
     @media only screen and (max-width: $bp-tiny){
         flex-direction: row;
@@ -138,6 +142,10 @@
 
     &__containerForInputBtn{
         display: flex;
+
+        &--big{
+            flex: 1;
+        }
     }
 
     &--url{
@@ -159,6 +167,10 @@
 
         }
     }
+    &--ingredient{
+        flex: 1;
+    }
+
     &__text{
         font-size: 1.4rem;
         display: flex;
