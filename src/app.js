@@ -45,14 +45,22 @@ const renderApp = () => {
   }
 };
 
-const renderLoading = () => {
-  ReactDOM.render(<LoadingPage />, document.getElementById('app'));
+ReactDOM.render(<LoadingPage />, document.getElementById('app'));
+
+const setFetchingDataVar = (val) => {
+  if(hasRendered){
+    store.dispatch({type:'SET_FETCHING_DATA_VAR', val})
+  }
 } 
-renderLoading();
+
+const renderAfterSettedData = () => {
+  setFetchingDataVar(false);            
+  renderApp();
+}
 
 firebase.auth().onAuthStateChanged((user) => {
-
   if (user) {
+    setFetchingDataVar(true);
     store.dispatch(login(user.uid));
 
     //checking if user is login for first time
@@ -63,9 +71,9 @@ firebase.auth().onAuthStateChanged((user) => {
       store.dispatch(setNameAndAvatar(userInfo));
       
       Promise.all([store.dispatch(setShoppingList()),
-        store.dispatch(setLikes()), store.dispatch(setOwnRecipes()), store.dispatch(setOwnRecipes())]).then(() => {
+      store.dispatch(setLikes()), store.dispatch(setOwnRecipes()), store.dispatch(setOwnRecipes())]).then(() => {
         
-          const pathname = history.location.pathname;
+        const pathname = history.location.pathname;
         const pathnameArr = pathname.split('/');
         const state = store.getState();
   
@@ -79,7 +87,6 @@ firebase.auth().onAuthStateChanged((user) => {
           }else{
             history.push('/dashboard');
           }
-          renderApp();
         }else if(pathnameArr[1]==='recipe' && pathnameArr[2]==='fromUsers'){
           //users (own, liked or unknown)
           const ownRecipes = state.recipes.ownRecipes;
@@ -91,32 +98,26 @@ firebase.auth().onAuthStateChanged((user) => {
   
           if(ownIndex > -1){
             history.push(`/edit-recipe/${id}`);
-            renderApp();        
           }else if(likedIndex>-1){
             store.dispatch(setSelectedRecipe(likedRecipes[likedIndex]))
-            renderApp();        
           }else{
             store.dispatch(setSelectedRecipeByID(id)).then(() => {
-              renderApp();        
             })
           }
         }else if (pathname === '/') {
           history.push('/dashboard');
-          renderApp();
-        }else{
-          renderApp();
         }
+        renderAfterSettedData();
       });
     }else{
-      renderApp();
       store.dispatch({type: "IS_NEW"})
       history.push('/dashboard');
+      renderAfterSettedData();
     }
   })  
   }else {
     store.dispatch(logout());
-    renderApp();
     history.push('/');
+    renderApp();
   }
-
 });

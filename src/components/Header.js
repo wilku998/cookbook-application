@@ -62,7 +62,7 @@ export class Header extends React.Component {
 
   set(respond){
     respond !== [] && this.props.setSearchedRecipes(respond);
-    this.props.setFetchingDataVar(false);
+    this.props.setFetchingRecipes(false);
   }
   getRecipesFromUsers(){
     return database.ref('usersRecipes').once('value')
@@ -146,7 +146,7 @@ export class Header extends React.Component {
     if(history.location.pathname !== '/dashboard'){
       history.push('/dashboard');
     }
-    this.props.setFetchingDataVar(true);
+    this.props.setFetchingRecipes(true);
     this.state.advencedOpen && this.toggleAdvencedSearch(false);
     this.state.searchVisible && this.toggleWhenMobile(false, false);
   }
@@ -334,15 +334,15 @@ export class Header extends React.Component {
                           <input  type="text"
                             disabled={this.state.addingFiltersDisabled} 
                             className=
-                            {this.state.addingFiltersDisabled || (!this.state.filterIngredientsInputValid && this.state.filterIngredientsInput!=="") ? 
-                            "input-small input-small--disabled input-small--text" 
+                            {this.state.addingFiltersDisabled || (!this.state.filterIngredientsInputValid) ? 
+                            "input-small input-small--count input-small--disabled input-small--withBtn" 
                               :
-                            "input-small input-small--text"} 
+                            "input-small input-small--count input-small--withBtn"} 
                             onChange={e => this.onFilterIngredientsInputChange(e.target.value)}
                             value={this.state.filterIngredientsInput}
                           />
                           <button className=
-                            {this.state.addingFiltersDisabled || (!this.state.filterIngredientsInputValid && this.state.filterIngredientsInput!=="") ? 
+                            {this.state.addingFiltersDisabled || (!this.state.filterIngredientsInputValid) ? 
                             "input-small__btn input-small__btn--disabled"
                               :
                             "input-small__btn"}
@@ -496,7 +496,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setSearchedRecipes: (recipes) => dispatch(setSearchedRecipes(recipes)),
     startLogout: () => dispatch(startLogout()),
-    setFetchingDataVar: (val) => dispatch({type:"SET_FETCHING_DATA_VAR", val})
+    setFetchingRecipes: (val) => dispatch({type:"SET_FETCHING_RECIPES", val})
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

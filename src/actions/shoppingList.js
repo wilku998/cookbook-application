@@ -44,10 +44,15 @@ export const addIngredients = (ingredients, from) => {
             if(from===recipe.from){
               return {
                 ...recipe,
-                ingredients: recipe.ingredients.map((igr, i) => {
-                  return {
-                    ...igr,
-                    count: igr.count + ingredients[i].count
+                ingredients: ingredients.map((igr) => {
+                  const index = recipe.ingredients.findIndex(e => e.unit === igr.unit && e.ingredient === igr.ingredient);
+                  if(index>-1){
+                    return {
+                      ...igr,
+                      count: igr.count + recipe.ingredients[index].count
+                    }
+                  }else{
+                    return igr
                   }
                 })
               }
@@ -89,6 +94,7 @@ export const changeCountInRedux = (allIngredients, recipes) => ({
 
 export const changeCount = (from, ingredient, count, unit, sign, diffrence) => {
     return (dispatch, getState) => {
+      console.log({from, ingredient, count, unit, sign, diffrence})
         const uid = getState().auth.uid;
         const state = getState().shoppingList;
 
@@ -261,18 +267,20 @@ export const overwriteShoppingList = (ingredients, from) => {
             let actionCount;
 
             ingredients.forEach(igrFromAction => {
-              if(igrFromAction.ingredient === igr.ingredient){
+              if(igrFromAction.ingredient === igr.ingredient && igrFromAction.unit === igr.unit){
                 actionCount = igrFromAction.count
 
-                countFromRecipeInShoppingList = state.recipes.find(e => e.from === from).ingredients
-                .find(el => el.ingredient===igrFromAction.ingredient).count;
+                const recipeInShoppingList = state.recipes.find(e => e.from === from).ingredients
+                .find(el => el.ingredient===igrFromAction.ingredient && el.unit===igrFromAction.unit);
+
+                countFromRecipeInShoppingList = recipeInShoppingList ? recipeInShoppingList.count : 0
               }
             })
 
             if(countFromRecipeInShoppingList!==0){
               return {
                 ...igr,
-                count: igr.count - countFromRecipeInShoppingList + actionCount
+                count: parseInt((igr.count - countFromRecipeInShoppingList + actionCount)*10)/10
               }
             }else{
               return igr

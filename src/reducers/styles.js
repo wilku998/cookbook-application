@@ -21,6 +21,11 @@ export default (state = {leftSideHeight: 0, twoCompVisible: true, scrWidth: 0}, 
             ...state,
             fetchingData: action.val
         }
+    case 'SET_FETCHING_RECIPES':
+        return {
+            ...state,
+            fetchingRecipes: action.val
+        }
       default:
         return state;
     }

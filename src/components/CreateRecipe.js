@@ -17,9 +17,6 @@ class CreateRecipe extends React.Component {
         super(props)
         this.state = {
             modalIsOpen: false,
-            formCount: 1,
-            formUnit: 'kg',
-            formIngredient: '',
             percentage: 0,
             message: '',
             addingDisabled: false,
@@ -37,9 +34,6 @@ class CreateRecipe extends React.Component {
                     likedBy: []
             }
         }
-        this.onAddCountChange = this.onAddCountChange.bind(this);
-        this.onAddUnitChange = this.onAddUnitChange.bind(this);
-        this.onAddIngredientChange = this.onAddIngredientChange.bind(this);
         this.addIngredient = this.addIngredient.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.removeIngredient = this.removeIngredient.bind(this);
@@ -115,53 +109,28 @@ class CreateRecipe extends React.Component {
         }))
     }
 
-    onAddCountChange(value){
-        countValidation(value, this.state.formUnit) && 
-        this.setState(() => ({
-            formCount: value,
-        }))
-    }
-
-    onAddUnitChange(value){
-        this.setState((state) => ({
-            formUnit: value,
-            formCount: state.formCount>100 ? 100 : state.formCount
-        }))
-    }
-
-    onAddIngredientChange(value){
-        this.setState(()=> ({
-            formIngredient: value,
-            validForm: ingredientValidation(value)
-        }))
-    }
-
-    addIngredient(event){
-        event.preventDefault();
-        if(this.state.validForm && this.state.recipe.ingredients.length<20){
-            const index = this.state.recipe.ingredients.findIndex(e => e.ingredient === this.state.formIngredient && e.unit === this.state.formUnit)
+    addIngredient(count, unit, ingredient){
+        if(this.state.recipe.ingredients.length<20){
+            const index = this.state.recipe.ingredients.findIndex(e => e.ingredient === ingredient && e.unit === unit)
             let ingredients;
             if(index===-1){
-                ingredients = [...this.state.recipe.ingredients, {count: parseFloat(this.state.formCount), unit: this.state.formUnit==='none' ? "" : this.state.formUnit,
-                    ingredient: this.state.formIngredient
+                ingredients = [...this.state.recipe.ingredients, {count, unit: unit==='none' ? "" : unit,
+                    ingredient: ingredient
                 }];
             }else{
                 ingredients = this.state.recipe.ingredients.map((e, i) => {
                     if(i === index){
-                        const formCount = parseFloat(this.state.formCount);
-                        console.log(this.state.formCount)
-                        console.log(e.count)
-                        let count;
-                        if(this.state.formUnit!=="g" && e.count+formCount>100){
-                            count=100
-                        }else if (this.state.formUnit==="g" && e.count+formCount>1000){
-                            count=1000
+                        let newCount;
+                        if(unit!=="g" && e.count+count>100){
+                            newCount=100
+                        }else if (unit==="g" && e.count+count>1000){
+                            newCount=1000
                         }else{
-                            count = formCount + e.count
+                            newCount = count + e.count
                         }
                         return{
                             ...e,
-                            count
+                            count: newCount
                         }
                     }else{
                         return e
@@ -170,16 +139,12 @@ class CreateRecipe extends React.Component {
             }
 
             this.setState(({recipe} = state) =>({
-                recipe: {...recipe, ingredients},
-                formCount: 1,
-                formUnit: 'kg',
-                formIngredient: '',
+                recipe: {...recipe, ingredients}
             }))
         }
     }
 
     removeIngredient(ingredient, count, unit){
-        console.log(ingredient, count, unit)
         this.setState(({recipe} = state) => ({
             recipe: {
                 ...recipe,
@@ -388,14 +353,10 @@ class CreateRecipe extends React.Component {
                         </div>
                     </div>
 
-                    <AddIngredientForm addIngredient={this.addIngredient} onAddCountChange={this.onAddCountChange} onAddUnitChange={this.onAddUnitChange}
-                        onAddIngredientChange={this.onAddIngredientChange}
-                        formCount={this.state.formCount} formUnit={this.state.formUnit} formIngredient={this.state.formIngredient}
-                        lines={this.props.scrWidth<=350 ? 2 : 1}
-                        addingDisabled={(this.state.formIngredient==="" ? false : !this.state.validForm) ||
-                        this.state.recipe.ingredients.length>=20}
+                    <AddIngredientForm addIngredient={this.addIngredient}
+                        lines={this.props.twoCompVisible ? 2 : this.props.scrWidth<=350 ? 2 : 1}
+                        disabled={false}                    
                     />
-
 
                     <div className="recipe__ingredients ingredients">
                         <h3 className="recipe__ingredients__title">Ingredients</h3>

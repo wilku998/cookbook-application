@@ -153,10 +153,8 @@
             }
 
             &--warnings{
-                @media only screen and (max-width: $bp-medium){
-                    padding: 2rem 2rem 4rem 2rem;
-                }
-                
+                padding: 1rem 2rem 5rem 2rem;
+         
                 @media only screen and (max-width: $bp-smallest){
                     padding: 2rem 2rem 6rem 2rem;
                 } 
@@ -167,6 +165,9 @@
             clip-path: polygon(0% 0%, 0% 100%, 100% 86%, 100% 0%);
             margin-top: 0;
 
+            @media only screen and (max-width: $bp-smallest){
+                clip-path: polygon(0% 0%, 0% 100%, 100% 90%, 100% 0%);
+            } 
         }
     }
 

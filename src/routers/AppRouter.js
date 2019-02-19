@@ -13,32 +13,35 @@ import CreateRecipe from '../components/CreateRecipe'
 import ShoppingList from '../components/ShoppingList';
 import Header from '../components/Header';
 import GreetingPopup from '../components/GreetingPopup';
+import LoadingPage from '../components/LoadingPage';
 
 export const history = createHistory();
-const AppRouter = ({auth}) => {
-  console.log(auth)
+const AppRouter = ({auth, fetchingData}) => {
   return(
   <Router history={history}>
-    <div>
-      {auth.userName && (<Header />)}
-      <GreetingPopup />
-      <Switch>
-        <PublicRoute path="/" component={LoginPage} exact={true} />
-        <PrivateRoute path="/dashboard" component={DashboardPage} />
-        <PrivateRoute path="/recipe/:name" component={Recipe} exact={true}/>
-        <PrivateRoute path="/recipe/fromUsers/:id" component={Recipe} />
-        <PrivateRoute path="/recipes/:type" component={PrivateList} />
-        <PrivateRoute path="/create-recipe" component={CreateRecipe} />
-        <PrivateRoute path="/edit-recipe/:id" component={CreateRecipe} />
-        <ShoppingListRouter path="/shopping-list" component={ShoppingList} />
-        
-        <Redirect to="/dashboard" />
-      </Switch>
-    </div>
+    {fetchingData ? <LoadingPage /> :
+      <div>
+        {auth.userName && (<Header />)}
+        <GreetingPopup />
+        <Switch>
+          <PublicRoute path="/" component={LoginPage} exact={true} />
+          <PrivateRoute path="/dashboard" component={DashboardPage} />
+          <PrivateRoute path="/recipe/:name" component={Recipe} exact={true}/>
+          <PrivateRoute path="/recipe/fromUsers/:id" component={Recipe} />
+          <PrivateRoute path="/recipes/:type" component={PrivateList} />
+          <PrivateRoute path="/create-recipe" component={CreateRecipe} />
+          <PrivateRoute path="/edit-recipe/:id" component={CreateRecipe} />
+          <ShoppingListRouter path="/shopping-list" component={ShoppingList} />
+          
+          <Redirect to="/dashboard" />
+        </Switch>
+      </div>
+    }
   </Router>
 )};
 
 const mapStateToProps=(state => ({
-  auth: state.auth
+  auth: state.auth,
+  fetchingData: state.styles.fetchingData
 }))
 export default connect(mapStateToProps)(AppRouter);

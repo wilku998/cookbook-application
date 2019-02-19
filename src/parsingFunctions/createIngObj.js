@@ -9,10 +9,9 @@ export default (ing) => {
         ingredient = ing.replace(e, count)
     })
 
-    console.log(ing)
     let objIng = {};
     // checking if there is a unit
-    let ingredientArr = ingredient.split(' ');
+    let ingredientArr = ingredient.trim().split(' ');
     const unitIndex = ingredientArr.findIndex((e) => {
         return units.includes(e)
     })

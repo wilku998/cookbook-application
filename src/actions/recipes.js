@@ -155,7 +155,7 @@ export const incrementOrDecreaseServings = ({ingredients, newServings, initialSe
 
     return {
       ...e,
-      count: Math.round((intialCount/initialServings*newServings)*100)/100
+      count: Math.round((intialCount/initialServings*newServings)*10)/10
     }
   });
 

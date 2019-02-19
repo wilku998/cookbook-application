@@ -43,7 +43,7 @@ class GreetingComponent extends React.Component{
                     <h2 className="dashboard__h">Warnings</h2>
                     <div className="dashboard__section">
                         <i className="dashboard__icon icon-attention-alt"/>
-                        <p className="dashboard__p dashboard__p--right">Because of free acces to the emedam recipes datebase the application allows user to search for a recipe up to 5 times per minute, but searching for another users recipe is always available.</p>
+                        <p className="dashboard__p dashboard__p--right">Because of free acces to the emedam recipes datebase the application allows user to search for a recipe up to 5 times per minute, excluding ingredients isn't available and user can't choose more than 2 health lables. Searching for another users recipes is always available.</p>
                     </div>
                     </div>
                 </div>

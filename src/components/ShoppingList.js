@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { changeCount, removeAllIngredients, removeIngredient, addIngredients } from '../actions/shoppingList';
 import MoveButtons from './MoveButtons';
-import {ingredientValidation, countValidation} from '../validation/ingredientsValidation';
 import IngredientsList from './IngredientsList';
 import ReactDOM from 'react-dom';
 import reduceTitle from '../parsingFunctions/reduceTitle';
@@ -25,38 +24,35 @@ class ShoppingList extends React.Component{
             addingDisabled: true
         }
 
-        this.onAddCountChange = this.onAddCountChange.bind(this);
-        this.onAddUnitChange = this.onAddUnitChange.bind(this);
-        this.onAddIngredientChange = this.onAddIngredientChange.bind(this);
         this.addIngredient = this.addIngredient.bind(this);
         this.removeIngredient = this.removeIngredient.bind(this);
 
         this.nextPage=this.nextPage.bind(this);
         this.prevPage=this.prevPage.bind(this);
         this.removeIngredient=this.removeIngredient.bind(this);
-        this.onCountChange=this.onCountChange.bind(this);
+        this.changeCount=this.changeCount.bind(this);
         this.getItemsHeight=this.getItemsHeight.bind(this);
+        this.countBiggerThanSum=this.countBiggerThanSum.bind(this);
     }
 
-    onCountChange(count, ingredient, countBefore, unit){
+    countBiggerThanSum(count, ingredient, unit){
         let sumOfSameCounts = 0;
-        
-        if(this.state.selectorValue==='all'){
-            this.props.recipes.forEach(recipe => {
-                recipe.ingredients.forEach(igr => {
-                    if(igr.ingredient === ingredient){
-                        sumOfSameCounts+=igr.count
-                    }
-                })
-            })
-        }
 
-        if(countValidation(count, unit, countBefore) && (count>=sumOfSameCounts || this.state.selectorValue!='all')){
-            const sign = Math.sign(count - countBefore);
-            const diffrence = Math.abs(count - countBefore)
-    
-            this.props.changeCount(this.state.selectorValue, ingredient, count, unit, sign, diffrence);
-        }
+        this.props.recipes.forEach(recipe => {
+            recipe.ingredients.forEach(igr => {
+                if(igr.ingredient === ingredient && igr.unit === unit){
+                    sumOfSameCounts+=igr.count
+                }
+            })
+        })
+        console.log({count, ingredient, unit})
+        return count>=sumOfSameCounts || this.state.selectorValue!='all'
+    }
+
+    changeCount(count, ingredient, countBefore, unit){
+        const sign = Math.sign(count - countBefore);
+        const diffrence = Math.abs(count - countBefore)
+        this.props.changeCount(this.state.selectorValue, ingredient, count, unit, sign, diffrence); 
     }
 
     removeIngredient(ingredient, count, unit){
@@ -82,40 +78,10 @@ class ShoppingList extends React.Component{
         }))        
     }
 
-    onAddCountChange(value){
-
-        countValidation(value, this.state.formUnit) && 
-        this.setState((state) => ({
-            formCount: value
-        }))
+    addIngredient(count, unit, ingredient){
+        return this.props.addIngredient(count, unit, ingredient)
     }
-
-    onAddUnitChange(value){
-        this.setState(() => ({
-            formUnit: value
-        }))
-    }
-
-    onAddIngredientChange(formIngredient){
-        let valid = ingredientValidation(formIngredient)
-
-        this.setState((state)=> ({
-            formIngredient,
-            addingDisabled: !valid || state.selectorValue!=='all'
-        }))
-    }
-
-    addIngredient(e){
-        e.preventDefault();
-        !this.state.addingDisabled && this.props.addIngredient(parseFloat(this.state.formCount), this.state.formUnit, this.state.formIngredient).then(() => {
-            this.setState(() => ({
-                formCount: 1,
-                formUnit: 'kg',
-                formIngredient: '',
-                addingDisabled: true
-            }))
-        })
-    }
+    
 
     nextPage(){
         this.setState((state)=>{
@@ -138,7 +104,6 @@ class ShoppingList extends React.Component{
     onSelectorChange(value){
         this.setState(()=>({
             selectorValue: value,
-            addingDisabled: value!=='all',
             page: 1,
             currentLimit: 9999,
             selectorChanged: true
@@ -240,12 +205,6 @@ class ShoppingList extends React.Component{
         }
     }
 
-    /*
-isupdate
-ShoppingList.js:155 new calc
-ShoppingList.js:166 6
-IngredientsList.js:15 send heights
-    */
     render(){
         return (
             <div className={this.props.twoCompVisible ? "shopping-list" : "shopping-list shopping-list--fullscr"} ref='component'>
@@ -256,9 +215,8 @@ IngredientsList.js:15 send heights
 
                     <AddIngredientForm addIngredient={this.addIngredient} onAddCountChange={this.onAddCountChange} onAddUnitChange={this.onAddUnitChange}
                         onAddIngredientChange={this.onAddIngredientChange}
-                        formCount={this.state.formCount} formUnit={this.state.formUnit} formIngredient={this.state.formIngredient}
                         lines={this.props.twoCompVisible ? 2 : this.props.scrWidth<=350 ? 2 : 1}
-                        addingDisabled={this.state.formIngredient==="" ? false || this.state.selectorValue!=='all' : this.state.addingDisabled}
+                        disabled={this.state.selectorValue!=='all'}
                         parent={this.props.scrWidth>910 ? "shopping" : ""}
                     />
 
@@ -286,7 +244,8 @@ IngredientsList.js:15 send heights
                                     this.getSelectedIngredients(this.props.allIngredients, this.props.recipes, this.state.selectorValue),
                                     this.state.page, this.state.currentLimit
                                     )}
-                                removeIngredient={this.removeIngredient} onCountChange={this.onCountChange}
+                                removeIngredient={this.removeIngredient} changeCount={this.changeCount}
+                                countBiggerThanSum={this.countBiggerThanSum}
                             />
                     : <span className="shopping-list__ingredients__empty">Your shopping list is empty.</span>}
                 </div>
