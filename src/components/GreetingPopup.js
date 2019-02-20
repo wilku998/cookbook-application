@@ -82,14 +82,14 @@ class GreetingPopup extends React.Component{
         contentLabel="Example Modal"
         onRequestClose={this.closeModal}
         className="popup popup--first-login"
-        shouldCloseOnOverlayClick={false}
         style= {{overlay: {zIndex: 100, background: 'linear-gradient(to right bottom, rgba(255,255,255,0.5), rgba(180, 180, 180, 0.5))',
         overflowY:'scroll', overflowX: 'hidden'}}}
         ref="comp"
+        onRequestClose={() => false}
         >
             <div className="popup__greeting">
-                <h2 className="popup__greeting__h">Welcome in cookbook app</h2>
-                <span className="popup__greeting__span">Set your name and avatar or leave default</span>
+                <h2 className="popup__greeting__h">Welcome for the first time in cookbook app</h2>
+                <span className="popup__greeting__span">Set your name. Avatar you can leave default.</span>
             </div>
 
             <div className="popup__avatar-container">
@@ -109,7 +109,7 @@ class GreetingPopup extends React.Component{
             />
 
             <div className="popup__btn-container popup__btn-container--first-login">
-                <button className="popup__btn button button--grey" onClick={() => this.getStarted()}>Get started!</button>
+                <button className="popup__btn button button--primary" onClick={() => this.getStarted()}>Get started!</button>
             </div>
         </Modal>
         )

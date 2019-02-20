@@ -29,12 +29,14 @@
 
     &--unit{
         cursor: pointer;
+        
         &:focus{
             border-radius: .75rem .75rem 0 0;
         }
 
         &--recipe-selector{
             flex: initial;
+            background-color: var(--color-grey-light-3);
         }
     }
 
@@ -144,7 +146,7 @@
         display: flex;
 
         &--big{
-            flex: 1;
+            //flex: 1;
         }
     }
 
@@ -166,7 +168,7 @@
         }
     }
     &--ingredient{
-        flex: 1;
+        //flex: 1;
     }
 
     &__text{

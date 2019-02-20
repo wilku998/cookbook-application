@@ -2,10 +2,10 @@
 
     outline: none;
     border-radius: .5rem;
-    border: 1px solid var(--color-prmiary-6);
-    background-color: var(--color-primary-3);
+    border: 1px solid var(--color-prmiary-4);
+    background: linear-gradient(to right bottom, var(--color-primary-1), var(--color-primary-3));
     padding: 3rem;
-    
+    overflow: hidden;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -14,9 +14,9 @@
     color: var(--color-grey-dark-1);
 
     &--gradient{
-        background: linear-gradient(to right bottom, var(--color-primary-1), var(--color-primary-3));
         border: 1px solid var(--color-primary-4);
     }
+
     &--first-login{
         width: 45rem;
         padding: 0;
@@ -25,29 +25,27 @@
 
     &__btn{
         box-shadow: 0 1rem 4rem rgba(black, .2);
-        border: none;
         padding: 1rem 2rem;
+        color: var(--color-grey-dark-2);
         &-container{
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
             &--first-login{
                 padding: 2rem;
-                background-color: var(--color-primary-4);
+                background-color: var(--color-primary-3);
             }
         }
         &--2{
-            box-shadow: 0 .5rem 2rem rgba(black, .2);
+            box-shadow: 0 .3rem 1rem rgba(black, .2);
 
             &:first-child{
                 margin-right: 2rem;
             }
         }
-        &:focus{
-            outline: none;
-        }
+
         &:hover{
-            border: none;
             transform: translateY(-.2rem);
         }
         &:active{
@@ -73,22 +71,26 @@
     &__greeting{
         text-align: center;
         padding: 2rem;
-        background-color: var(--color-primary-4);
+        background-color: var(--color-primary-3);
         color: var(--color-grey-dark-1);
         &__h{
             font-size: 2.6rem;
             font-weight: 400;
-
+            line-height: 1;
+            margin-bottom: 1rem;
         }
 
         &__span{
+            line-height: 1;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-primary-1);
             display: block;
             font-size: 1.4rem;
         }
     }
 
     &__input{
-        background-color: var(--color-grey-light-1);
+        background-color: var(--color-grey-light-2);
         color: var(--color-grey-dark-2);
         text-align: center;
         padding: 1rem 3rem;
