@@ -88,8 +88,8 @@ class GreetingPopup extends React.Component{
         onRequestClose={() => false}
         >
             <div className="popup__greeting">
-                <h2 className="popup__greeting__h">Welcome for the first time in cookbook app</h2>
-                <span className="popup__greeting__span">Set your name. Avatar you can leave default.</span>
+                <h2 className="popup__greeting__h">Welcome in the Cookbook App</h2>
+                <span className="popup__greeting__span">Before you get started set your name.<br/>Avatar you can leave default.</span>
             </div>
 
             <div className="popup__avatar-container">
