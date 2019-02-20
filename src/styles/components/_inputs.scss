@@ -150,10 +150,8 @@
 
     &--url{
         padding: 0;
-        @media only screen and (max-width: $bp-tiny){
-        } 
 
-        @media only screen and (max-width: $bp-tiny){
+        @media only screen and (max-width: $bp-smallest){
             flex-direction: column;
             margin-bottom: 1rem;
         } 

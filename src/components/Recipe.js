@@ -59,14 +59,12 @@ class Recipe extends React.Component{
 
     incrementOrDecreaseServings(type){
         let newServings;
-
+        console.log(this.props.recipe.servings)
         if(this.props.recipe.servings>1 && type==='minus'){
-            newServings = this.props.recipe.servings-1;
-          }else if(this.props.recipe.servings<30 && type==='plus'){
-            newServings = this.props.recipe.servings+1;
-          }
-
-        this.props.incrementOrDecreaseServings({...this.props.recipe, newServings});
+            this.props.incrementOrDecreaseServings({...this.props.recipe, newServings: this.props.recipe.servings-1});
+        }else if(this.props.recipe.servings<30 && type==='plus'){
+            this.props.incrementOrDecreaseServings({...this.props.recipe, newServings: this.props.recipe.servings+1});
+        }
     }
 
     sliceHealthLabels(labels){
