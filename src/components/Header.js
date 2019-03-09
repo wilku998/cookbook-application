@@ -69,8 +69,8 @@ export class Header extends React.Component {
   }
 
   getRecipesFromAPI(query){
-    const request = `https://api.edamam.com/search?q=${query}&app_id=${this.props.api.APP_ID}&app_key=
-    ${this.props.api.APP_KEY}&to=30${this.state.filterHealthLabels
+    const request = `https://api.edamam.com/search?q=${query}&app_id=${process.env.EDEMAN_ID}&app_key=
+    ${process.env.EDEMAN_KEY}&to=30${this.state.filterHealthLabels
     .filter(e => e.isActive).map((e) => `&health=${e.parameter}`)}
     ${this.state.filterIngredients.map(e => `&excluded=${e}`)}`.replace(',','');
 
@@ -485,7 +485,6 @@ export class Header extends React.Component {
 
 const mapStateToProps = (state) => {
   return{
-    api: state.api,
     userInfo: state.auth,
     twoCompVisible: state.styles.twoCompVisible,
     scrWidth: state.styles.scrWidth
