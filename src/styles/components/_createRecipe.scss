@@ -9,6 +9,11 @@
         width: 100%;
         outline: none;
         transition: all .2s;
+
+        @media only screen and (max-width: $bp-medium){
+            max-width: 60rem;
+        }
+
         @media only screen and (max-width: $bp-smallest){
             width: 0;
             flex: 1;

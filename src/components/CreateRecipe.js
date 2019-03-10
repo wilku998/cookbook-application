@@ -400,9 +400,9 @@ class CreateRecipe extends React.Component {
                     <div className="recipe__footer">
                         <label className="label label--url">
                             <span className="label__text label__text--url">Full recipe url (optional)</span>
-                            <input className={this.state.recipe.url === "" ? "input-small input-default input-small--text" :
-                                this.state.validUrl ? "input-small input-valid input-small--text" :
-                                "input-small input-invalid input-small--text"
+                            <input className={this.state.recipe.url === "" ? "input-small input-small--url input-default input-small--text" :
+                                this.state.validUrl ? "input-small input-small--url input-valid input-small--text" :
+                                "input-small input-small--url input-invalid input-small--text"
                                 }
                                 value={this.state.recipe.url} onChange={e => this.setUrl(e.target.value)} type="text"
                             />

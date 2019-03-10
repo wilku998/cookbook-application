@@ -88,25 +88,24 @@ class GreetingPopup extends React.Component{
         onRequestClose={() => false}
         >
             <div className="popup__greeting">
-                <h2 className="popup__greeting__h">Welcome in the Cookbook App</h2>
                 <span className="popup__greeting__span">Before you get started set your name.<br/>Avatar you can leave default.</span>
             </div>
 
-            <div className="popup__avatar-container">
+            <div className="popup__set-data">
                 <div className="popup__avatar" ref={"image"} style={{backgroundImage: `url(${this.state.img})`}}>
                     <input className="fileButton fileButton--greeting" type="file" onChange={e => this.fileSelection(e)} />
                     {this.state.submittingDisabled ? <img className="loader__image fileButton__loader fileButton__loader--greeting" src="/images/loader.gif" />
                         :
                     !this.state.avatarChanged && <i className="icon-camera fileButton__icon fileButton__icon--avatar"/>}                           
                 </div>
-            </div>
 
-            <input value={this.state.userName}
-            className={this.state.userName==='' ? "popup__input" 
-            : this.state.valid ? "popup__input popup__input--valid" : "popup__input popup__input--invalid"}
-                type="text" placeholder="your name"
-                onChange={(e) => this.onNameChange(e.target.value)}
-            />
+                <input value={this.state.userName}
+                    className={this.state.userName==='' ? "popup__input" 
+                    : this.state.valid ? "popup__input popup__input--valid" : "popup__input popup__input--invalid"}
+                        type="text" placeholder="your name"
+                        onChange={(e) => this.onNameChange(e.target.value)}
+                />
+            </div>
 
             <div className="popup__btn-container popup__btn-container--first-login">
                 <button className="popup__btn button button--primary" onClick={() => this.getStarted()}>Get started!</button>
