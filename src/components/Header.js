@@ -32,7 +32,9 @@ export class Header extends React.Component {
       filterIngredientsInputValid: false,
       arrowDown: false,
       addingFiltersDisabled: true,
-      limitHealthLabels: 2
+      limitHealthLabels: 2,
+      EDEMAN_ID: process.env.EDEMAN_ID,
+      EDEMAN_KEY: process.env.EDEMAN_KEY
     }
   }
 
@@ -69,8 +71,8 @@ export class Header extends React.Component {
   }
 
   getRecipesFromAPI(query){
-    const request = `https://api.edamam.com/search?q=${query}&app_id=${process.env.EDEMAN_ID}&app_key=
-    ${process.env.EDEMAN_KEY}&to=30${this.state.filterHealthLabels
+    const request = `https://api.edamam.com/search?q=${query}&app_id=${this.state.EDEMAN_ID}&app_key=
+    ${this.state.EDEMAN_KEY}&to=30${this.state.filterHealthLabels
     .filter(e => e.isActive).map((e) => `&health=${e.parameter}`)}
     ${this.state.filterIngredients.map(e => `&excluded=${e}`)}`.replace(',','');
 
