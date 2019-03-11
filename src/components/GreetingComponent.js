@@ -24,7 +24,7 @@ class GreetingComponent extends React.Component{
                     <h2 className="dashboard__h">About</h2>
                     <div className="dashboard__section">
                         <i className="dashboard__icon icon-help-circled-alt"/>
-                        <p className="dashboard__p dashboard__p--right">Application uses emedam recipies database and allows users to create their own recipes. The Cookbook App was created only for educational purposes and is one hundred percent free. I'm inviting you to test my work. Find delicius recipes and share the website to your friends.</p>            
+                        <p className="dashboard__p dashboard__p--right">Application uses emedam recipies database and allows users to create their own recipes. The Cookbook App was created only for educational purposes and is in one hundred percent free. I'm inviting you to test my work. Find delicius recipes and share the website to your friends.</p>            
                     </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@ class GreetingComponent extends React.Component{
                 <div className="dashboard__left">
                     <h2 className="dashboard__h">Guides</h2>
                     <div className="dashboard__section">
-                    <p className="dashboard__p dashboard__p--left">Expand the search bar on top of the website to select from which database you want to search recipes. You can also choose the health label that you are interested in and also exclude ingredients you don't want. If you want add ingredients to shopping list choose "all" option in selector.</p>            
+                    <p className="dashboard__p dashboard__p--left">Expand the search bar on top of the website to select from which database you want to search recipes. You can also choose the health label that you are interested in and also exclude ingredients you don't want. If you want add own ingredients to shopping list choose "all" option in shopping-list selector.</p>            
                     <i className="dashboard__icon dashboard__icon--dark icon-book"/>
                     </div>
                 </div>
@@ -43,7 +43,7 @@ class GreetingComponent extends React.Component{
                     <h2 className="dashboard__h">Warnings</h2>
                     <div className="dashboard__section">
                         <i className="dashboard__icon icon-attention-alt"/>
-                        <p className="dashboard__p dashboard__p--right">Because of free acces to the emedam recipes datebase the application allows user to search for a recipe up to 5 times per minute, excluding ingredients isn't available and user can't choose more than 2 health lables. Searching for another users recipes is always available.</p>
+                        <p className="dashboard__p dashboard__p--right">Because of free acces to the emedam recipes datebase the application allows user to search for a recipe up to 5 times per minute, excluding ingredients isn't available and user can't choose more than 2 health lables. Searching for another users recipes is always available with all features.</p>
                     </div>
                     </div>
                 </div>

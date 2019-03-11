@@ -1,5 +1,5 @@
 .dashboard{
-    background-color: var(--color-primary-2);
+    background-image: linear-gradient(to right bottom, var(--color-primary-2), var(--color-primary-3));
     color: var(--color-grey-dark-1);
     display: flex;
     flex-direction: column;
@@ -46,7 +46,7 @@
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 text-transform: uppercase;
-
+                opacity: .75;
                 @media only screen and (max-width: $bp-medium){
                     font-size: 3.5rem;
                 }
@@ -70,6 +70,7 @@
         background: -webkit-linear-gradient(var(--color-grey-light-5), var(--color-primary-7));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        font-weight: 400;
     }
     &__p{
         text-align: justify;
@@ -108,7 +109,7 @@
 
 
         &--dark{
-            color: var(--color-primary-3);
+            color: var(--color-primary-3-4);
         }
 
         @media only screen and (max-width: $bp-medium){
@@ -121,7 +122,6 @@
     }
 
     &__left{
-        background-color: var(--color-primary-2);
         padding: 1rem 0 3rem 2rem;
 
         @media only screen and (max-width: $bp-medium){
@@ -153,7 +153,7 @@
             }
 
             &--warnings{
-                padding: 1rem 2rem 5rem 2rem;
+                padding: 1rem 2rem 5rem 0;
          
                 @media only screen and (max-width: $bp-smallest){
                     padding: 2rem 2rem 6rem 2rem;
